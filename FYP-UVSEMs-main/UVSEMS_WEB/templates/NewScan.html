@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Scan</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+        <!--  Mah JS code Bank -->
+        <script src="{{ url_for('static', filename='repo.js') }}"></script>
+
+
+
+  </head>
+
+  <body class="body-pt">
+    <div class="wrapper-pt">
+      
+      <aside class="pt-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderPentesterDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="#" class="active">
+            <span class="material-icons-round">radar</span>
+            <h3>New Scan</h3>
+          </a>
+          <a href="{{ url_for('renderNewZapScan') }}">
+            <span class="material-icons-round">flash_on</span>
+            <h3>ZAP Scan</h3>
+          </a>
+          <a href="{{ url_for('render_myscans') }}">
+            <span class="material-icons-round">history</span>
+            <h3>My Scans</h3>
+          </a>
+          <a href="{{ url_for('show_pending') }}">
+            <span class="material-icons-round">pending_actions</span>
+            <h3>Pending Scans</h3>
+          </a>
+          <a href="{{ url_for('renderRetestAlerts') }}">
+            <span class="material-icons-round">flag</span>
+            <h3>Retests Alerts</h3>
+          </a>
+          <a href="{{ url_for('render_vullib') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVES</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        
+        <div class="banner">
+            <h1>Pen-Tester Dashboard/ New Scan</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401 Not Logged in') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <b>Warning:</b> Always ensure you have explicit authorisation before initiating any scanning procedures on networks
+          not owned by you.<br>
+          Conduct your activities ethically, with a clear intention to enhance security postures without malicious intent.<br>
+          Be fully aware of and comply with all relevant legislation to avoid legal consequences. 
+          <br><br>Failure to adhere to these guidelines poses legal risks in cojunction with;<br>
+          * Criminal Justice (Offences Relating to Information Systems) Act 2017
+          <br>
+          * General Data Protection Regulation (GDPR)<br>
+          * European Union Directive on Security of Network and Information Systems (NIS Directive)
+        </div>
+        <div class="scan-card">
+          <!-- New Task Configuration -->
+          <form action="/RunScan" method="post">
+            <div class="scan-card">
+              <h1>New Scan Configuration</h1>
+              <!-- Task Configuration -->
+              <div class="input-group">
+                <label for="taskName">Task Name:</label><br>
+                <input type="text" id="taskName" name="taskName" required><br><br>
+                <label for="scanTarget">Scan Target (IP Address):</label><br>
+                <input type="text" id="scanTarget" name="scanTarget" required><br><br>
+                <label for="retestOf">Retest of Previous Scan:</label><br>
+                <select id="retestOf" name="retestOf">
+                    <option value="0">Select Previous Scan</option>
+                    <option value="0">Not a Retest</option>
+                    {% for scan_id, scan_name in scans %}
+                <option value="{{ scan_id }}">ScanID: {{ scan_id }}, {{ scan_name }}</option>
+                {% endfor %}
+                </select><br><br>
+              </div>
+              
+              <!-- DNS Recon -->
+              <h2>DNS Recon</h2>
+              <div class="input-group">
+                <label for="domain">Domain Name:</label><br>
+                <input type="text" id="domain" name="domain" placeholder="example.com"><br><br>
+              </div>
+              
+              <!-- Nmap Scan -->
+              <h2>Nmap Scan</h2>
+              <div class="input-group">
+                <label for="nmapscan">Scan Settings:</label><br>
+                <select id="nmapscan" name="nmapscan">
+                  <option value="">Select Scan Type</option>
+                  <option value="1">Fast Common Ports Scan</option>
+                  <option value="2">Intense Scan</option>
+                  <option value="3">Intense TCP Scan</option>
+                  <option value="4">Intense No Ping</option>
+                  <option value="5">Stealth Decoy Scan</option>
+                  <option value="6">Quick OS and Version Scan</option>
+                  <option value="7">Default Scan</option>
+                </select><br>
+              </div>
+              
+              <!-- OpenVAS Settings -->
+              <h2>OpenVAS Settings</h2>
+              <div class="input-group">
+                <label for="portlist">Port List:</label><br>
+                <select id="portlist" name="portlist">
+                  <option value="">Select Port List</option>
+                  <option value="33d0cd82-57c6-11e1-8ed1-406186ea4fc5">All IANA assigned TCP</option>
+                  <option value="730ef368-57e2-11e1-a90f-406186ea4fc5">All IANA assigned TCP and UDP</option>
+                </select><br><br>
+                <label for="scanner">Scanner:</label><br>
+                <select id="scanner" name="scanner">
+                  <option value="">Select Scanner</option>
+                  <option value="6acd0832-df90-11e4-b9d5-28d24461215b">Common Vulnerabilities and Exposures</option>
+                  <option value="08b69003-5fc2-4037-a479-93b440211c73">General-Purpose</option>
+                </select><br>
+              </div>
+
+
+              <!-- Recon Scan Only Checkbox -->
+          <div class="input-group">
+            <input class="Checkbox" type="Checkbox"  style="display: inline-block;"> 
+            <label for="reconOnly">Recon Scan Only</label><br><br>
+          </div>
+
+              <button type="submit">Start Scans</button>
+            </div>
+          </form>
+          
+      
+     
+            <br>
+        </DIV>
+      </main>
+
+    </div>
+    
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

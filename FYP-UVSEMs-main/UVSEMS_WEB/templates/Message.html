@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Message</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    <script>
+        // Disable the back button
+        history.pushState(null, null, document.URL);
+        window.addEventListener('popstate', function () {
+            history.pushState(null, null, document.URL);
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="Header">
+            <div class="top-banner">
+                <h1>Something has occured...</h1>
+            </div>
+        </div>
+        <div class="Message-box-content">
+            <P>❗</P><U><p>Important Message</p><BR></U>
+                <P>{{ message }}<P> 
+                    <br><br>
+                    {% set role = session.get('role', 'default') %}
+                    {% if role == 1 %}
+                    <a href="{{ url_for('renderAdminDashboard') }}" class="btn">Return to Dashboard</a>
+                    {% elif role == 2 %}
+                    <a href="{{ url_for('renderPentesterDash') }}" class="btn">Return to Dashboard</a>
+                    {% elif role == 3 %}
+                    <a href="{{ url_for('renderAnalystDash') }}" class="btn">Return to Dashboard</a>
+                    {% elif role == 4 %}
+                    <a href="{{ url_for('renderEngineerDash') }}" class="btn">Return to Dashboard</a>
+                    {% else %}
+                    <a href="{{ url_for('login') }}"class="btn">Return to Dashboard</a>
+                    {% endif %}
+            </div>
+
+        </div>
+
+        <footer>
+            Andrew Gilbey &#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+        </footer>
+    </div>
+    </div>
+</body>
+</html>

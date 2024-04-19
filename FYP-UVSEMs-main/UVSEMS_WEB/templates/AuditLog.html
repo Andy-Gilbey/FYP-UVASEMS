@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Logs</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+        <!-- Add mah JS code bank -->
+        <script src="{{ url_for('static', filename='repo.js') }}"></script>
+
+  </head>
+  <body>
+
+  
+    <div class="wrapper">
+      <aside>
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderAdminDashboard') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderAddUserPage') }}">
+            <span class="material-icons-round">person_add_alt</span>
+            <h3>Add User</h3>
+          </a>
+          <a href="{{ url_for('renderManageUsers') }}">
+            <span class="material-icons-round">manage_accounts</span>
+            <h3>Manage Users</h3>
+          </a>
+          <a href="{{ url_for('render_audit_log') }}" class="active">
+            <span class="material-icons-round">content_paste_search</span>
+            <h3>View Audit Log</h3>
+          </a>
+
+
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="banner">
+            <h1>Administrator Dashboard/ Audit Logs</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401 Not Logged in') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+        <div class="scrollable-table-wrapper">
+        <table id="AuditTable">
+          <thead>
+              <tr>
+                  <th>Log#</th>
+                  <th>UserID</th>
+                  <th>Action</th> 
+                  <th>Description</th> 
+                  <th>Time</th>
+                  <th>IP Address</th>
+                  <th>Browser</th>
+                  <th>Severity</th>
+                  <th>Details</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% if auditLogs %}
+              {% for log in auditLogs %}
+            <tr>
+                <td>{{ log.LogID|default('None', true) }}</td>
+                <td>{{ log.UserID|default('None', true) }}</td>
+                <td>{{ log.Action|default('None', true) }}</td>
+                <td>{{ log.Description|default('None', true) }}</td>
+                <td>{{ log.Timestamp|default('None', true) }}</td>
+                <td>{{ log.IPAddress|default('None', true) }}</td>
+                <td>{{ log.BrowserInfo|default('None', true) }}</td>
+                <td>{{ log.SeverityLevel|default('None', true) }}</td>
+                <td>{{ log.Details|default('None', true) }}</td>
+            </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                  <td colspan="9">No logs recorded</td>
+              </tr>
+              {% endif %}
+        </tbody>
+        
+      </table>
+
+      </main>
+    </div>
+    </div>
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Scans</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-pt">
+    <div class="wrapper-pt">
+      <aside class="pt-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderPentesterDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderNewScan') }}">
+            <span class="material-icons-round">radar</span>
+            <h3>New Scan</h3>
+          </a>
+          <a href="{{ url_for('renderNewZapScan') }}">
+            <span class="material-icons-round">flash_on</span>
+            <h3>ZAP Scan</h3>
+          </a>
+          <a href="#" class="active">
+            <span class="material-icons-round">history</span>
+            <h3>My Scans</h3>
+          </a>
+          <a href="{{ url_for('show_pending') }}">
+            <span class="material-icons-round">pending_actions</span>
+            <h3>Pending Scans</h3>
+          </a>
+          <a href="{{ url_for('renderRetestAlerts') }}">
+            <span class="material-icons-round">flag</span>
+            <h3>Retests Alerts</h3>
+          </a>
+          <a href="{{ url_for('render_vullib') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVES</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Pen-Tester Dashboard/ My Scans</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <br>
+            
+            
+            <br>
+            <div class= "banner">
+            <h2> Owned Scans</h2><br>
+            <p style="font-size: 14px">On this page you can explore the results of scans you have made and own. Click on the Scan name to move
+              to another page that details the results in full. 
+              Scans can be exported to CSV for easier viewing on the full results page.<br><BR>
+              <B>Please be aware that downloading and storing CSV files locally 
+              on your machine carries inherent risks. These files <b>will</b> contain sensitive information and should be handled with 
+              caution. <b>Always</b> ensure that your device and network are secure, and consider encrypting or deleting the 
+              files after use to mitigate potential security threats.</B>
+            </p>
+            </DIV>
+              <div class="scrollable-table-wrapper">
+                <table id="MyScanResultsTable">
+                    <thead>
+                        <tr>
+                          <th>Scan ID</th>
+                            <th>Scan Name</th>
+                            <th>Target</th>
+                            <th>Scan Date</th>
+                            <th>NMap</th>
+                            <th>DNS</th>
+                            <th>VAS</th>
+                            <th>ZAP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scan in scans %}
+                        <tr>
+                          <td>{{ scan['ScanID']}}</td>
+                          <td>    <a href="{{ url_for('render_scan_resby', scan_id=scan['ScanID'], scan_name=scan['ScanName'], ScanDate=scan['ScanDate'], target=scan['Target']) }}">{{ scan['ScanName'] }}</a></td>
+                            <td>{{ scan['Target'] }}</td>
+                            <td>{{ scan['ScanDate'] }}</td>
+                            <td>{{ 'True' if scan['NMap'] else 'False' }}</td>
+                            <td>{{ 'True' if scan['DNS'] else 'False' }}</td>
+                            <td>{{ 'True' if scan['VAS'] else 'False' }}</td>
+                            <td>{{ 'True' if scan['ZAP'] else 'False' }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="7">No scans found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            
+        </main>
+
+      </div>
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

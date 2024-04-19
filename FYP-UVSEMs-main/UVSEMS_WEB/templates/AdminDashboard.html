@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrator Dashboard</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+    <!-- Add mah JS code bank -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <aside>
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="#" class="active">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderAddUserPage') }}">
+            <span class="material-icons-round">person_add_alt</span>
+            <h3>Add User</h3>
+          </a>
+          <a href="{{ url_for('renderManageUsers') }}">
+            <span class="material-icons-round">manage_accounts</span>
+            <h3>Manage Users</h3>
+          </a>
+          <a href="{{ url_for('render_audit_log') }}">
+            <span class="material-icons-round">content_paste_search</span>
+            <h3>View Audit Log</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="banner">
+            <h1>Administrator Dashboard</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401 Not Logged in') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+
+        <div class="mcards">
+          <div class="stat-card">
+            <span class="material-icons-round">group</span>
+            <h3>Total Users</h3><br>
+            <h2>{{ totalUsers }}</h2>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons-round">radio_button_checked</span>
+            <h3>Active Users</h3><br>
+            <h2>{{ currentUsers }}</h2>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons-round">ac_unit</span>
+            <h3>Inactive Users</h3><br>
+            <h2>{{ inactives }}</h2>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons-round">assignment</span>
+            <h3>Total Log Entries</h3><br>
+            <h2>{{ tot_log }}</h2>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons-round">radar</span>
+            <h3>Scans This Week</h3><br>
+            <h2>{{ week_scan }}</h2>
+          </div>
+          <div class="stat-card">
+            <span class="material-icons-round">schedule</span>
+            <h3>Recent Log</h3><br>
+            <p><strong>Action:</strong> {{ latestAuditLog.action }}</p>
+            <p><strong>Timestamp:</strong> {{ latestAuditLog.timestamp }}</p>
+          </div>
+        </div>
+        <div class="chart-section">
+          <div class="chart-card">
+              <u><h2>User Roles Breakdown</h3></u>
+                      <br>
+                      <img src="data:image/png;base64,{{ pie }}" alt="User Roles Pie Chart" style="width: 300px">
+          </div>
+          <div class="chart-card">
+              <u><h2>Logs by Action</h3></u>
+              <br>
+              <img src="data:image/png;base64,{{ pie_a }}" alt="Another Pie Chart" style="width: 300px">
+          </div>
+
+      <div class="chart-card">
+        <u><h2>Scans By User</h3></u>
+        <br>
+        <img src="data:image/png;base64,{{ pie_b }}" alt="Another Pie Chart" style="width: 300px">
+    </div>      </div>
+        </div>
+
+      </main>
+
+    </div>
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

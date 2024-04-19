@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="Header">
+            <div class="top-banner">
+                <h1>An error has occurred...</h1>
+            </div>
+        </div>
+        <div class="Message-box-content" >
+            <!-- Display the error-specific image -->
+            <img src="{{ image_url }}" alt="Error Image" style=" width: 500px; height: auto;">
+            <br><br>
+            <U><p>Error: {{ code }}</p><BR></U>
+                <P>{{ message }}<P>
+                    <br><br>
+                    <a href="{{ url_for('login') }}" class="btn">Return to Login</a>
+            </div>
+        </div>
+
+        <footer>
+            Andrew Gilbey &#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+        </footer>
+    </div>
+</body>
+</html>

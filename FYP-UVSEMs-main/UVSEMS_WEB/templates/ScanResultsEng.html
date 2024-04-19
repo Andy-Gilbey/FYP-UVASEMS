@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Scan Results</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <!-- DataTables JS -->
+    <script type="text/javascript" src="https://cdn.datatables.net/2.0.3/js/jquery.dataTables.js"></script>
+    <!-- Buttons extension JS and its dependencies -->
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/3.0.1/js/dataTables.buttons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.1/js/buttons.html5.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.0.3/css/dataTables.dataTables.css">
+    <!-- Buttons extension CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/3.0.1/css/buttons.dataTables.css">
+
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-eng">
+    <div class="wrapper-eng">
+      <aside class="eng-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderAnalystDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('rendermyjobs') }}" class="subcat">
+            <span class="material-icons-round">work</span>
+            <h3>Back to Jobs</h3>
+          </a>
+          <a href="{{ url_for('render_vullibEN') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVE Library</h3>
+          </a>
+          <a href="{{ url_for('rendecompjobs') }}">
+            <span class="material-icons-round">history</span>
+            <h3>Complete Jobs</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Pen-Tester Dashboard/ Scan Data</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <br>
+            <div class="banner" style="background: Grey; color:black">
+              <dl>
+                <dt>Scan Name:</dt>
+                <dd>[{{ scan_name }}]</dd>
+
+                <dt>Scan ID:</dt>
+                <dd>[{{ scan_id }}]</dd>
+              
+                <dt>Scan Target:</dt>
+                <dd>[{{ target }}]</dd>
+              
+                <dt>Scan Date:</dt>
+                <dd>[{{ ScanDate }}]</dd>
+
+                <dt>Priority:</dt>
+                <dd>[{{ priority }}]</dd>
+
+                <dt>Scan Status:</dt>
+                <dd>[{{ status }}]</dd>
+                
+                <dt>Analyst:</dt>
+                <dd>[{{ assigned_analyst_id }}::{{ assigned_analyst }}]</dd>
+
+              </dl>
+              <br>
+                <button id="exportToCsv"> <span class="material-icons-round">keyboard_return</span>CSV</button>
+                <div class="banner" style="background: Grey; color:black">
+                 
+              </div>
+            </div>
+            <br>
+            <form action="/UpdateAnalysis" method="post">
+            <div class="res-scrollable-table-wrapper">
+            <h2>Nmap Results</h2>
+            <table id="NMapResultsTable">
+              <thead>
+                <tr>
+                  <th>IPAddress</th>
+                  <th>Hostname</th>
+                  <th>Port</th>
+                  <th>Protocol</th>
+                  <th>ServiceName</th>
+                  <th>ServiceVersion</th>
+                  <th>State</th>
+                  <th>OSFingerPrint</th>
+                  <th>StartTime</th>
+                  <th>EndTime</th>
+                  <th>ScanType</th>
+                  <th>Analyst CVSS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if nmap_results %}
+                {% for result in nmap_results %}
+                {% if result['AnalystCVSS'] != 'False Pos' %}
+                <tr>
+                  <td>{{ result['IPAddress'] }}</td>
+                  <td>{{ result['Hostname'] }}</td>
+                  <td>{{ result['Port'] }}</td>
+                  <td>{{ result['Protocol'] }}</td>
+                  <td>{{ result['ServiceName'] }}</td>
+                  <td>{{ result['ServiceVersion'] }}</td>
+                  <td>{{ result['State'] }}</td>
+                  <td>{{ result['OSFingerPrint'] }}</td>
+                  <td>{{ result['StartTime'] }}</td>
+                  <td>{{ result['EndTime'] }}</td>
+                  <td>{{ result['ScanType'] }}</td>
+                    <td>{{ result['AnalystCVSS'] }}</td> 
+                </tr>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="12">No Nmap scans associated with this ScanID found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table><br>
+            
+            <h2>DNS Results</h2>
+            <table id="DNSTable">
+              <thead>
+                <tr>
+                  <th>RecordType</th>
+                  <th>RecordValue</th>
+                  <th>Date</th>
+                  <th>Domain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if dns_results %}
+                {% for result in dns_results %}
+                <tr>
+                  <td>{{ result['RecordType'] }}</td>
+                  <td>{{ result['RecordValue'] }}</td>
+                  <td>{{ result['Date'] }}</td>
+                  <td>{{ result['Domain'] }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="4">No DNS scans associated with this ScanID found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table><br>
+            
+            <h2>VAS Results</h2>
+<table id="VASTable">
+  <thead>
+    <tr>
+      <th>Port</th>
+      <th>NVT</th>
+      <th>Description</th>
+      <th>Time</th>
+      <th>Type</th>
+      <th>HashValue</th>
+      <th>Severity</th>
+      <th>Analyst CVSS</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if vas_results %}
+    {% for result in vas_results %}
+    {% if result['AnalystCVSS'] != 'Ignore' %}
+    <tr>
+      <td>{{ result['Port'] }}</td>
+      <td>{{ result['NVT'] }}</td>
+      <td>{{ result['Description'] }}</td>
+      <td>{{ result['Time'] }}</td>
+      <td>{{ result['Type'] }}</td>
+      <td>{{ result['HashValue'] }}</td>
+      <td>{{ result['Severity'] }}</td>
+      <td>{{ result['AnalystCVSS'] }}</td> 
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="8">No VAS scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table><br>
+<h2>Spider Results</h2>
+<table id="SpiderTable">
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>StatusCode</th>
+      <th>TimeStamp</th>
+      <th>Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if spider_results %}
+    {% for result in spider_results %}
+    <tr>
+      <td>{{ result['URL'] }}</td>
+      <td>{{ result['StatusCode'] }}</td>
+      <td>{{ result['TimeStamp'] }}</td>
+      <td>{{ result['Method'] }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="4">No Spider scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table><br>
+<h2>ZAP Results</h2>
+<table id="ZAPTable">
+  <thead>
+    <tr>
+      <th>Alert</th>
+      <th>URL</th>
+      <th>Risk</th>
+      <th>Detail</th>
+      <th>Timestamp</th>
+      <th>Analyst CVSS</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if zap_results %}
+    {% for result in zap_results %}
+    {% if result['AnalystCVSS'] != 'Ignore' %}
+    <tr>
+      <td>{{ result['Alert'] }}</td>
+      <td>{{ result['URL'] }}</td>
+      <td>{{ result['Risk'] }}</td>
+      <td>{{ result['Detail'] }}</td>
+      <td>{{ result['Timestamp'] }}</td>
+      <td>{{ result['AnalystCVSS'] }}</td> 
+    </tr>
+    {% endif %}
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="6">No ZAP scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+</div>
+</form>
+<br>
+<div class="banner" style="background: Grey; color:black">
+
+
+  <form action="{{ url_for('generate_report', scan_id=scan_id) }}" method="post">
+    <input type="hidden" name="scan_id" value="{{ scan_id }}">
+    <input type="submit" id="exportToPdf" value="Generate Report">
+
+  </form>
+  <br>
+  <form action="{{ url_for('setRetest', scan_id=scan_id) }}" method="post">
+    <input type="hidden" name="scan_id" value="{{ scan_id }}">
+    <input type="hidden" name="stat" value="Retest Required">
+    <input type="submit" id="retestFlag" value="FLAG SCAN FOR RETEST">
+  </form>
+
+
+<br>
+  <div class="notes-section">
+    <div class="notes-display">
+        <h3>My Notes</h3>
+        <div class="note-display">{{ my_notes }}</div>
+        <p>Last Update: {{ my_notes_last_update or 'Not Updated' }}</p>
+    </div><br>
+    
+    <div class="notes-display">
+        <h3>Analyst Notes</h3>
+        <div class="note-display">{{ analyst_notes }}</div>
+        <p>Last Update: {{ analyst_notes_last_update or 'Not Updated' }}</p><br>
+    </div>
+    <div class="add-note-form">
+      <h3>Add Note</h3>
+        <form action="/update_notes" method="POST">
+          <textarea name="new_notes_{{ scan_id }}" rows="4" style="width:100%; margin-top: 10px;"></textarea>
+          <input type="hidden" name="scan_id" value="{{ scan_id}}">
+          <button type="submit" id="updateNoteSubmit" name="submit_btn">Add Note</button>
+        </form>
+    </div>
+</div>
+
+</div><br>
+<br><br>  <br><br>
+
+</main>
+
+      </div>
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

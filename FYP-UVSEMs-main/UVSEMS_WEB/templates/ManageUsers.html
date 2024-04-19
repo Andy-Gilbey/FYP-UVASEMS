@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+
+    <!-- Include jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- DataTables CSS and JS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+
+    <!-- Add mah JS code bank -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+
+  </head>
+  <body>
+
+    <script>
+      var userAccessLevel = "{{ access_level }}";
+  </script>
+  <script src="{{ url_for('static', filename='repo.js') }}"></script>
+  
+    <div class="wrapper">
+      <aside>
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderAdminDashboard') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderAddUserPage') }}">
+            <span class="material-icons-round">person_add_alt</span>
+            <h3>Add User</h3>
+          </a>
+          <a href="{{ url_for('renderManageUsers') }}" class="active">
+            <span class="material-icons-round">manage_accounts</span>
+            <h3>Manage Users</h3>
+          </a>
+          <a href="{{ url_for('render_audit_log') }}">
+            <span class="material-icons-round">content_paste_search</span>
+            <h3>View Audit Log</h3>
+          </a>
+
+
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="banner">
+            <h1>Administrator Dashboard/Manage Users</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401 Not Logged in') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+
+        <table id="UsersTable">
+          <thead>
+              <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>First Name</th> 
+                  <th>Last Name</th> 
+                  <th>Role</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Access</th>
+                  <th>Manage</th>
+                  <th>Password Reset</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for user in users %}
+              <tr>
+                  <td>{{ user.UserID }}</td>
+                  <td id="username_{{ user.UserID }}">{{ user.Username }}</td>
+                  <td id="fname_{{ user.UserID }}">{{ user.Fname }}</td>
+                  <td id="lname_{{ user.UserID }}">{{ user.Lname }}</td>
+                  <td id="role_{{ user.UserID }}" data-role="{{ user.Role }}">{{ user.Role }}</td>
+                  <td id="email_{{ user.UserID }}">{{ user.Email }}</td>
+                  <td id="phone_{{ user.UserID }}">{{ user.Phone }}</td>
+                  <td id="access_{{ user.UserID }}" data-accessLevel="{{ user.AccessLevel }}">{{ user.AccessLevel }}</td>
+                  <td>
+                    <button id="manageBtn_{{ user.UserID }}" class="manage-dropdown-button" onclick="makeEditable({{ user.UserID }})">🛠️</button>
+                </td>
+                  <td>
+                    {% if session['access_level'] ==1 and user.AccessLevel != 3 %}
+                    <button onclick="resetPassword({{ user.UserID }})">Reset Password</button>
+                    {% endif %}
+                </td>
+            </tr>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+
+      </main>
+
+    </div>
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

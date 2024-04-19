@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+    <div class="login-container">
+
+
+        <div class="logo-container">
+
+        </div>
+        <div class="title"><img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="UVASEMS-LOGO">
+
+</div>          <br><br><br>
+        <form action="/login" method="post"> 
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" maxlength="20">
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password">
+            </div>
+            <button type="submit">Login</button>
+        </form>
+        <br>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <div class="flash-message">{{ message }}</div><br>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+    </div>
+    <footer>
+        Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</body>
+</html>

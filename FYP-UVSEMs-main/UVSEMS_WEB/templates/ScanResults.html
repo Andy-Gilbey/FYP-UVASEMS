@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Results</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+
+
+
+
+      <!-- DataTables CSS and JS -->
+      <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+      <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-pt">
+    <div class="wrapper-pt">
+      <aside class="pt-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderPentesterDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderNewScan') }}">
+            <span class="material-icons-round">radar</span>
+            <h3>New Scan</h3>
+          </a>
+          <a href="{{ url_for('renderNewZapScan') }}">
+            <span class="material-icons-round">flash_on</span>
+            <h3>ZAP Scan</h3>
+          </a>
+          <a href="{{ url_for('render_myscans') }}" class="subcat">
+            <span class="material-icons-round">history</span>
+            <h3>Back to Scans</h3>
+          </a>
+          <a href="{{ url_for('show_pending') }}">
+            <span class="material-icons-round">pending_actions</span>
+            <h3>Pending Scans</h3>
+          </a>
+          <a href="{{ url_for('render_vullib') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVES</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Pen-Tester Dashboard/ My Scans/ Scan Results</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <br>
+            <div class="banner" style="background: Grey; color:black">
+              <dl>
+                <dt>Scan Name:</dt>
+                <dd>[{{ scan_name }}]</dd>
+
+                <dt>Scan ID:</dt>
+                <dd>[{{ scan_id }}]</dd>
+              
+                <dt>Scan Target:</dt>
+                <dd>[{{ target }}]</dd>
+              
+                <dt>Scan Date:</dt>
+                <dd>[{{ ScanDate }}]</dd>
+
+                <dt>Scan Status:</dt>
+                <dd>[{{ status }}]</dd>
+
+                <dt>Retest:</dt>
+                <dd>[{{ "Not a Retest" if restOf == 0 else restOf }}]</dd>
+
+                <dt>Analyst:</dt>
+                <dd>[{{ ass_analyst }}]</dd>
+              </dl>
+              <br><br>
+              <div style="display: flex;">
+                <button id="exportToCsv"> <span class="material-icons-round">keyboard_return</span>CSV</button>&nbsp;
+            </div>
+            <br>
+            <div style="display: flex;">
+              <form action="/updateAssignedAnalyst" method="POST" style="flex">
+                  {% if assigned_analyst %}
+                      <!-- Display the assigned analyst's name and ID -->
+                      <p>Assigned Analyst: ID: {{ assigned_analyst['UserID'] }}, {{ assigned_analyst['Username'] }}</p>
+                  {% else %}
+                      <!-- Only display the form elements (including the label) if no analyst is assigned -->
+                      <label for="analystSelect">Update Analyst:</label><br>
+                      <select id="analystSelect" name="analyst_id">
+                          <option value="">Select an Analyst</option>
+                          {% for analyst in analysts %}
+                              <option value="{{ analyst['UserID'] }}">{{ analyst['Username'] }} (ID: {{ analyst['UserID'] }})</option>
+                          {% endfor %}
+                      </select>
+                      <input type="hidden" name="scan_id" value="{{ scan_id }}">
+                      <button id="submitAssignment" type="submit">Submit</button>
+                  {% endif %}
+              </form>
+          </div>
+          </div>
+            <br>
+            <div class="res-scrollable-table-wrapper">
+            <h2>Nmap Results</h2>
+            <table id="NMapResultsTable">
+              <thead>
+                <tr>
+                  <th>IPAddress</th>
+                  <th>Hostname</th>
+                  <th>Port</th>
+                  <th>Protocol</th>
+                  <th>ServiceName</th>
+                  <th>ServiceVersion</th>
+                  <th>State</th>
+                  <th>OSFingerPrint</th>
+                  <th>StartTime</th>
+                  <th>EndTime</th>
+                  <th>ScanType</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if nmap_results %}
+                {% for result in nmap_results %}
+                <tr>
+                  <td>{{ result['IPAddress'] }}</td>
+                  <td>{{ result['Hostname'] }}</td>
+                  <td>{{ result['Port'] }}</td>
+                  <td>{{ result['Protocol'] }}</td>
+                  <td>{{ result['ServiceName'] }}</td>
+                  <td>{{ result['ServiceVersion'] }}</td>
+                  <td>{{ result['State'] }}</td>
+                  <td>{{ result['OSFingerPrint'] }}</td>
+                  <td>{{ result['StartTime'] }}</td>
+                  <td>{{ result['EndTime'] }}</td>
+                  <td>{{ result['ScanType'] }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="11">No Nmap scans associated with this ScanID found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table><br>
+            
+            <h2>DNS Results</h2>
+            <table id="DNSTable">
+              <thead>
+                <tr>
+                  <th>RecordType</th>
+                  <th>RecordValue</th>
+                  <th>Date</th>
+                  <th>Domain</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if dns_results %}
+                {% for result in dns_results %}
+                <tr>
+                  <td>{{ result['RecordType'] }}</td>
+                  <td>{{ result['RecordValue'] }}</td>
+                  <td>{{ result['Date'] }}</td>
+                  <td>{{ result['Domain'] }}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td colspan="4">No DNS scans associated with this ScanID found.</td>
+                </tr>
+                {% endif %}
+              </tbody>
+            </table><br>
+            
+            <h2>VAS Results</h2>
+<table id="VASTable">
+  <thead>
+    <tr>
+      <th>Port</th>
+      <th>NVT</th>
+      <th>Description</th>
+      <th>Time</th>
+      <th>Type</th>
+      <th>HashValue</th>
+      <th>Severity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if vas_results %}
+    {% for result in vas_results %}
+    <tr>
+      <td>{{ result['Port'] }}</td>
+      <td>{{ result['NVT'] }}</td>
+      <td>{{ result['Description'] }}</td>
+      <td>{{ result['Time'] }}</td>
+      <td>{{ result['Type'] }}</td>
+      <td>{{ result['HashValue'] }}</td>
+      <td>{{ result['Severity'] }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="7">No VAS scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table><br>
+<h2>Spider Results</h2>
+<table id="SpiderTable">
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>StatusCode</th>
+      <th>TimeStamp</th>
+      <th>Method</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if spider_results %}
+    {% for result in spider_results %}
+    <tr>
+      <td>{{ result['URL'] }}</td>
+      <td>{{ result['StatusCode'] }}</td>
+      <td>{{ result['TimeStamp'] }}</td>
+      <td>{{ result['Method'] }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="4">No Spider scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table><br>
+<h2>ZAP Results</h2>
+<table id="ZAPTable">
+  <thead>
+    <tr>
+      <th>Alert</th>
+      <th>URL</th>
+      <th>Risk</th>
+      <th>Detail</th>
+      <th>Timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if zap_results %}
+    {% for result in zap_results %}
+    <tr>
+      <td>{{ result['Alert'] }}</td>
+      <td>{{ result['URL'] }}</td>
+      <td>{{ result['Risk'] }}</td>
+      <td>{{ result['Detail'] }}</td>
+      <td>{{ result['Timestamp'] }}</td>
+    </tr>
+    {% endfor %}
+    {% else %}
+    <tr>
+      <td colspan="6">No ZAP scans associated with this ScanID found.</td>
+    </tr>
+    {% endif %}
+  </tbody>
+</table>
+</div>
+<br><br><br><br><br><br>
+</main>
+
+      </div>
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tasks</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-ana">
+    <div class="wrapper-ana">
+      <aside class="ana-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderAnalystDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="#" class="active">
+            <span class="material-icons-round">list_alt</span>
+            <h3>My Tasks</h3>
+          </a>
+          <a href="{{ url_for('renderMyResults') }}">
+            <span class="material-icons-round">summarize</span>
+            <h3>My Reports</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Analyst Dashboard/ Assigned Tasks</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <br>
+            <div class= "banner">
+              <h2> Assigned Tasks</h2><br>
+              <p style="font-size: 14px">
+                This page outlines tasks that have been allocated to your account post the penetration testing process. 
+                For a comprehensive review of the scan results and to establish your analysis criteria, select the "Scan Name" 
+                corresponding to the scan you intend to examine. <br><br>
+                <b>In accordance with your company's audit policy, it is imperative to meticulously document any state 
+                  modifications in the designated notes section provided at the conclusion of the results page.</b>
+              </p>
+              </DIV>
+            
+              <table id="MyTaskTable">
+                <thead>
+                    <tr>
+                        <th>Scan ID</th>
+                        <th>Scan Name</th>
+                        <th>Target</th>
+                        <th>Scan Date</th>
+                        <th>Current Notes</th>
+                        <th>Last Updated</th>
+                        <th>Priority</th>
+                        <th>Assigned Engineer</th>
+                        <th>Engineer Notes</th>
+                        <th>Engineer Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>{{ task['ScanID'] }}</td>
+                        <td><a href="{{ url_for('render_scanana_resby', scan_id=task['ScanID'], scan_name=task['ScanName'], ScanDate=task['ScanDate'], target=task['Target']) }}">{{ task['ScanName'] }}</a></td>
+                        <td>{{ task['Target'] }}</td>
+                        <td>{{ task['ScanDate'] }}</td>
+                        <td>
+                            <div style="width:100%; height:100px; overflow:auto;">{{ task['AnaNotes'] }}</div>
+                        </td>
+                        <td>{{ task['AnaNotesTimestamp'] or 'Not Updated' }}</td>
+                        <td>{{ task['Priority'] }}</td>
+                        <td>{{ task['AssignedEngineer'] or 'None' }}</td>
+                        <td>
+                            <div style="width:100%; height:100px; overflow:auto;">{{ task['EngNotes'] or '' }}</div>
+                        </td>
+                        <td>{{ task['EngNotesTimeStamp'] or 'Not Updated' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="10">No tasks found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+      </div>
+            
+        </main>
+
+      </div>
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

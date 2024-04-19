@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+    <!-- Add mah JS code bank -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <aside>
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+
+          <a href="{{ url_for('renderAdminDashboard') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderAddUserPage') }}" class="active">
+            <span class="material-icons-round">person_add_alt</span>
+            <h3>Add User</h3>
+          </a>
+          <a href="{{ url_for('renderManageUsers') }}">
+            <span class="material-icons-round">manage_accounts</span>
+            <h3>Manage Users</h3>
+          </a>
+          <a href="{{ url_for('render_audit_log') }}">
+            <span class="material-icons-round">content_paste_search</span>
+            <h3>View Audit Log</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="banner">
+            <h1>Administrator Dashboard/Add New User</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401 Not Logged in') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+        <div class="add-user-card">
+        <form action="/addUserDb" method="post"> 
+          <div class = "input-group">
+          <label for="nextUserId">User ID:</label><br>
+          <input type="text" id="nextUserId" name="nextUserId" readonly value="{{ nextUserId }}">
+          </div>
+          <div class="input-group">
+              <label for="username">Username:</label><br>
+              <input type="text" id="username" name="username" required pattern="^[a-zA-Z0-9]+$" title="Username can only contain letters and numbers.">
+          </div>
+          <div class="input-group">
+              <label for="fname">First Name:</label><br>
+              <input type="text" id="fname" name="fname" required>
+          </div>
+          <div class="input-group">
+              <label for="lname">Last Name:</label><br>
+              <input type="text" id="lname" name="lname" required>
+          </div>
+          <div class="input-group">
+              <label for="password">Temporary Password:</label><br>
+              <input type="password" id="password" name="password" required>
+          </div>
+          <div class="input-group">
+              <label for="email">Email:</label><br>
+              <input type="text" id="email" name="email" required>
+          </div>
+          <div class="input-group">
+              <label for="phone">Phone:</label><br>
+              <input type="text" id="phone" name="phone" required>
+          </div>
+          <div class="input-group">
+              <label for="role">Role:</label><br>
+              <select id="role" name="role" required>
+                  <option value="1">System Administrator</option>
+                  <option value="2">Penetration Tester</option>
+                  <option value="3">Analyst</option>
+                  <option value="4">Engineer</option>
+              </select>
+          </div>
+          <div class="input-group">
+              <label for="accessLevel">Access Level:</label><br>
+              <select id="accessLevel" name="accessLevel" {% if session.get('access_level') != 1 %}disabled{% endif %}>
+                  <option value="2" selected>2 - Limited Access</option>
+                  <option value="1">1 - Full Access</option>
+              </select>
+          </div>
+          <br>
+          
+          <button type="submit" class="Save_User">Save User</button>
+      </form>
+       
+    </div>
+      </main>
+
+    </div>
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

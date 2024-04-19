@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyst Dashboard</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+    <!-- Add mah JS code bank -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+  </head>
+  <body class="body-ana">
+    <div class="wrapper-ana">
+      <aside class="ana-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="#" class="active">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('render_mytasks') }}">
+            <span class="material-icons-round">list_alt</span>
+            <h3>My Tasks</h3>
+          </a>
+          <a href="{{ url_for('renderMyResults') }}">
+            <span class="material-icons-round">summarize</span>
+            <h3>My Reports</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        <div class="banner">
+            <h1>Analyst Dashboard</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+
+        <div class="chart-section">
+          <div class="chart-card">
+            <h3>Queue</h3><br> 
+              <table id="MyScanResultsTable">
+                  <thead>
+                      <tr>
+                          <th>Scan ID</th>
+                          <th>Scan Name</th>
+                          <th>Assignment Date</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <!-- Rows will be populated by server-side template rendering -->
+                      {% for scan in scans %}
+                      <tr>
+                          <td>{{ scan.ScanID }}</td>
+                          <td>{{ scan.ScanName }}</td>
+                          <td>{{ scan.AssignmentDate }}</td>
+                      </tr>
+                      {% else %}
+                      <tr>
+                          <td colspan="4">No scans found</td>
+                      </tr>
+                      {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      
+      <div class="mcards">
+          <div class="stat-card" style= "background: grey">
+              <span class="material-icons-round">functions</span>
+              <h3>Total Tasks</h3><br>
+              <h2>{{ taskcount }}</h2>
+          </div>
+          <div class="stat-card">
+              <span class="material-icons-round">layers</span>
+              <h3>Reports Generated</h3><br>
+              <h2>{{ allres }}</h2>
+          </div>
+          <div class="stat-card">
+              <span class="material-icons-round">group</span>
+              <h3>Favourite Engineer</h3><br>
+              <h2>{{ fav_user}} : {{ fav }}</h2>
+          </div>
+      </div>
+        </div>
+
+      </main>
+
+    </div>
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

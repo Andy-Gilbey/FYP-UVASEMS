@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reports</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-ana">
+    <div class="wrapper-ana">
+      <aside class="ana-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderAnalystDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('render_mytasks') }}">
+            <span class="material-icons-round">list_alt</span>
+            <h3>My Tasks</h3>
+          </a>
+          <a href="##" class="active">
+            <span class="material-icons-round">summarize</span>
+            <h3>My Reports</h3>
+          </a>
+          <a href="{{ url_for('rendercompareana') }}">
+            <span class="material-icons-round">compare_arrows</span>
+            <h3>Comparative Analysis</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Analyst Dashboard/ My Reports</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <br>
+            <div class= "banner">
+            <h2> Your Reports</h2><br>
+            <p style="font-size: 14px">On this page you can explore any reports that you have created. 
+              Any report that has been created can be downloaded in PDF format from this page.<br><BR>
+              <B>Please be aware that downloading and storing PDF report files locally 
+              on your machine carries inherent risks. These files <b>will</b> contain sensitive information and should be handled with 
+              caution. <b>Always</b> ensure that your device and network are secure, and consider encrypting or deleting the 
+              files after use to mitigate potential security threats.</B>
+            </p>
+            </DIV>
+            <br>
+            <table id="MyReports">
+              <thead>
+                  <tr>
+                      <th>Report ID</th>
+                      <th>Scan ID</th>
+                      <th>Scan Name</th>
+                      <th>Scan Date</th>
+                      <th>Report UID</th>
+                      <th>Download Report</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for report in reports %}
+                  <tr>
+                      <td>{{ report['ReportID'] }}</td>
+                      <td>{{ report['ScanID'] }}</td>
+                      <td>{{ report['ScanName'] }}</td>
+                      <td>{{ report['ScanDate'] }}</td>
+                      <td>{{ report['ReportUID'] }}</td>
+                      <td>
+                          
+                          <a href="{{ url_for('dlreport', report_id=report['ReportID']) }}">Download</a>
+                      </td>
+                  </tr>
+                  {% else %}
+                  <tr>
+                      <td colspan="4">No reports found</td>
+                  </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+            
+           
+            
+        </main>
+
+      </div>
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

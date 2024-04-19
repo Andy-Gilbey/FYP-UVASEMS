@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pending Scans</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports -->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+    <!-- DataTables CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.js"></script>
+    
+    <!-- Custom JS code -->
+    <script src="{{ url_for('static', filename='repo.js') }}"></script>
+</head>
+<body class="body-pt">
+    <div class="wrapper-pt">
+      <aside class="pt-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderPentesterDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderNewScan') }}">
+            <span class="material-icons-round">radar</span>
+            <h3>New Scan</h3>
+          </a>
+          <a href="{{ url_for('renderNewZapScan') }}">
+            <span class="material-icons-round">flash_on</span>
+            <h3>ZAP Scan</h3>
+          </a>
+          <a href="{{ url_for('render_myscans') }}">
+            <span class="material-icons-round">history</span>
+            <h3>My Scans</h3>
+          </a>
+          <a href="#" class="active">
+            <span class="material-icons-round">pending_actions</span>
+            <h3>Pending Scans</h3>
+          </a>
+          <a href="{{ url_for('renderRetestAlerts') }}">
+            <span class="material-icons-round">flag</span>
+            <h3>Retests Alerts</h3>
+          </a>
+          <a href="{{ url_for('render_vullib') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVES</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+        <main>
+            <div class="banner">
+                <h1>Pen-Tester Dashboard/ Pending Scans</h1>
+                <hr>
+                <br>
+                <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+                <div class="date-time" id="datetime"></div>
+                <script>
+                    pushDateTime();
+                </script>
+            </div>
+            <BR>
+              <div class= "banner">
+                <h2> Pending Scans</h2><br>
+                <p style="font-size: 14px">           
+                  Pending Scans are applicable exclusively to VAS (Vulnerability Assessment Scans). In instances where VAS is 
+                  not integrated within a given scan, the status may be marked as "pending." Such scans cannot be transmitted 
+                  to the database. This is because VAS is asynchronous, which may necessitate additional time for completion.<br> It is important that VAS scans be submitted to the database to ensure the compilation of reports by analysts.
+                </p>
+                </DIV>
+              <table id="openvasResultsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% if tasks %}
+                      {% for task in tasks %}
+                      <tr>
+                          <td>{{ task['name'] }}</td>
+                          <td>
+                              {% if task['run_status'] == 1 %}
+                              Done
+                              {% elif task['run_status'] == 2 %}
+                              Pending
+                              {% elif task['run_status'] == 3 %}
+                              Setting up
+                              {% elif task['run_status'] == 4 %}
+                              Running
+                              {% else %}
+                              {{ task['run_status'] }}
+                              {% endif %}
+                          </td>
+                          <td>{{ task['start_time'] }}</td>
+                          <td>{{ task['end_time'] }}</td>
+                          <td>
+                              {% if task['scan_exists'] or task['run_status'] != 1 %}
+                                  <button disabled>Send to Database</button>
+                              {% else %}
+                                  <form action="/SendTuDatabase" method="post">
+                                      <input type="hidden" name="task_id" value="{{ task['task_id'] }}">
+                                      <input type="hidden" name="task_name" value="{{ task['name'] }}">
+                                      <button type="submit">Send to Database</button>
+                                  </form>
+                              {% endif %}
+                          </td>
+                      </tr>
+                      {% endfor %}
+                  {% else %}
+                      <tr>
+                          <td colspan="5">No ongoing scans found</td>
+                      </tr>
+                  {% endif %}
+              </tbody>
+            </table>
+            
+        </main>
+
+
+    </div>
+    <div class="footer">
+      Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+    </div>
+</body>
+</html>

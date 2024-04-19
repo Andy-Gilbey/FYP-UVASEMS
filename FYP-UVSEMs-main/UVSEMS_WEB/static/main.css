@@ -1,0 +1,498 @@
+/* ---- PAGE 1 ---- */
+
+* {
+    margin: 0;
+    padding: 0;
+  }
+  
+  body, html {
+    height: 100%;
+    font-family: "Comfortaa", sans-serif;
+    background-color: #2c3e50; 
+    font-family: "Comfortaa", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+  
+  .Header {
+    background-color: #333333;
+    color: white;
+    padding: 25px;
+    text-align: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+  
+  .SideBar {
+    background-color: #252744;
+    color: white;
+    width: 250px;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    left: 0;
+    z-index: 999;
+  }
+  
+  .SideBar ul {
+    list-style: none;
+  }
+  
+  .SideBar ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+    display: block;
+    transition: all 0.3s ease;
+  }
+  
+  .SideBar ul li a:hover {
+    background-color: #373856;
+    padding-left: 5px;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr 2.1fr 1.1fr;
+    grid-template-rows: 0.3fr auto auto; 
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "Header Header Header Header"
+      "SideBar Content Content Content"
+      "SideBar Content Content Content";
+    display: flex;
+    flex-direction: column;
+
+
+  }
+  
+  .Content {
+    overflow: hidden;
+    overflow-y: auto;
+    height: auto;
+    min-height: 70vh; 
+    min-width: 150vh;
+    width: auto;
+    border: 2px solid #ccc;
+    margin-top: 0px;
+    margin-left: 260px; 
+    padding-top: 10px;
+    padding-right: 50px;
+    padding-left: 10px;
+    padding-bottom: 100px;
+    background-color: #373856;
+    text-align: center;
+  }
+  
+  
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px; /* Adjust as needed */
+    background-color: #333333; /* Adjust to match your theme */
+    color: white;
+    text-align: center;
+    line-height: 50px; /* Aligns text vertically */
+    font-size: 0.8em;
+}
+
+  /* - The boxes for the dashboard, this is dashboard specific - */ 
+.stat-box {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  width: calc(25% - 10px);
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  border: 2px solid white;
+  margin-bottom: 10px;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
+  }
+  .charts-wrapper {
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; 
+    flex-wrap: wrap; 
+    gap: 20px; 
+}
+  .charts-section {
+    background: #ffffff;
+    padding: 20px; 
+    border-radius: 5px; 
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    margin: 10px; 
+    border: 2px solid #ccc; 
+    text-align: center; 
+    width: 40%; 
+    margin-left: 6px; 
+    margin-right: auto;
+}
+
+.chart-box {
+    width: 100%; 
+    padding: 10px; 
+    text-align: center; 
+}
+  .top-stats {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 10px; 
+  }
+  label {
+    color: white;
+    font-size: 80%;
+    text-align: right; 
+}
+
+
+/* ---- ADD NEW USER  ---- */
+
+.Content-new-user {
+  width: auto;
+  overflow-y: auto;
+  min-height: 65vh; /* vh can be kept for viewport-relative height */
+  border: 2px solid white;
+  margin-left: 200px; /* Consider converting to % if needed */
+  padding: 0.3125em; /* 5px equivalent if base font size is 16px */
+  padding-left: 0.625em; /* 10px equivalent */
+  background-color: #373856;
+  text-align: left;
+}
+
+.Content-mu {
+  overflow: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 70vh; /* vh can be kept for viewport-relative height */
+  width: auto;
+  min-width: 150vh; /* vh can be kept for viewport-relative height */
+  border: 2px solid #ccc;
+  margin-top: 0;
+  margin-left: 10%; /* Assuming 260px is 16.25% of a full page width */
+  padding-top: 0.625em; /* 10px equivalent */
+  padding-right: 3.125em; /* 50px equivalent */
+  padding-left: 0.625em; /* 10px equivalent */
+  padding-bottom: 5em; /* 50px equivalent */
+  background-color: #373856;
+  text-align: center;
+}
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group input[type="email"],
+.input-group select {
+    width: 80%; 
+    padding: 10px;
+    margin: 6px 2px;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+
+
+
+.Save_User {
+  width: 400px; /* Set the width of the button */
+  padding: 10px 15px; /* Set the padding inside the button for better spacing */
+  background-color: #5C6BC0;
+  color: white; /* Set the text color */
+  border: none; /* Remove the default border */
+  border-radius: 5px; /* Optionally round the corners */
+  font-size: 1em; /* Set the font size */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.Save_User:hover {
+  background-color: #4d589b; /* Slightly darker shade on hover */
+}
+
+
+/* ---------- SCAN PAGE ------------ */ 
+
+.scan-results {
+  background-color: #f5f5f5;
+  border: 1px solid #dddddd;
+  padding: 15px;
+  margin-top: 20px;
+}
+.legal-warning {
+  background-color: #ffcccb; /* Light red for warning */
+  border: 1px solid #ff0000; /* Red border */
+  padding: 15px;
+  text-align: center;
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  margin-bottom: 20px; /* Space before the next section */
+  border-radius: 5px;
+}
+
+.legal-warning h3 {
+  margin-top: 0;
+  color: #d8000c; /* Dark red for heading */
+}
+
+.legal-warning p {
+  margin-bottom: 0;
+  color: #000; /* Standard text color */
+  text-align: left;
+}
+.stat-box table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.stat-box th, .stat-box td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    color: black;
+}
+
+.stat-box th {
+    background-color: whitesmoke;
+    color: #333333;
+    text-align: center;
+}
+
+
+.stat-box tr:nth-child(even) {
+    background-color: white;
+}
+
+@media (max-width: 600px) {
+    .stat-box table {
+        width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 60%;
+  border: 1px solid white;
+  font-family: "Noto Sans", sans-serif;
+  background-color: whitesmoke;
+}
+
+th, td {
+  border-bottom: 1px solid black; /* Only bottom border for cells */
+  padding: 8px;
+  text-align: center;
+}
+
+th {
+  background-color: white;
+  text-align: center;
+  color: black;
+  border-top: 1px solid white;
+}
+
+.manage-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.manage-dropdown-list {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  top: 100%; 
+  right: 0; 
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 9999;
+}
+
+.manage-dropdown-list a {
+  color: black;
+  z-index: 9999;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.manage-dropdown-list a:hover {background-color: gray}
+
+
+
+.manage-dropdown-button {
+  background-color: lightgray;
+  color: white;
+  padding: 3px 8px;
+  border: none;
+  cursor: pointer;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px; 
+  margin-bottom: 20px; 
+}
+
+.search-box label {
+  margin: 0; 
+  font-size: 1em; 
+}
+
+.search-box input[type="text"] {
+  width: 150px; 
+  padding: 5px;
+  border: 1px solid #d3d2d2; 
+  border-radius: 5px; 
+}
+.search-box button, .add-user-button {
+  color: white; 
+  border: none; 
+  cursor: pointer; 
+  width: 10%;
+  transition: background-color 0.3s; 
+}
+.add-user-button {
+  text-decoration: none;
+  display: block;
+  text-align: center;
+}
+
+/*  SCAN    */
+
+.Content-New-Scan {
+  overflow: hidden;
+  height: auto;
+  min-height: 150vh; /* Minimum height is full viewport height */
+  min-width: 150vh;
+  width: auto;
+  border: 2px solid #ccc;
+  margin-top: 600px;
+  margin-left: 278px; /* Decrease this value to push the content to the left */
+  padding-top: 10px;
+  padding-right: 45px;
+  padding-left: 10px;
+  padding-bottom: 5px;
+  background-color: #373856;
+  text-align: center;
+}
+
+.vas-section {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+
+}
+
+.vas-input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+.vas-input-group select{
+  width: 30%; 
+  padding: 10px;
+  margin: 6px 2px;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+}
+
+.vas-input-group label {
+  display: block;
+  text-align: left;
+  margin-bottom: 5px;
+}
+
+.vas-input-group input[type="text"] {
+  width: 100%;
+  text-align: left;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.vas-button {
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.vas-button:hover {
+  background-color: #45a049;
+}
+
+.skan-input-group{
+  width: 100%; 
+  padding: 8px;
+  margin: 3px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 100%;
+}
+
+.skan-input-group input[type="text"],
+.skan-input-group input[type="password"],
+.skan-input-group[type="email"],
+.skan-input-group select {
+    width: 80%; 
+    padding: 10px;
+    margin: 6px 2px;
+    border: 1px solid #ffffff;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+
+/* Error Message */ 
+.Message-box-content {
+  overflow: hidden;
+  height: auto;
+  min-height: 50vh; /* Minimum height is full viewport height */
+  min-width: 50vh;
+  width: auto;
+  color: white;
+  border: 2px solid #ccc;
+  margin-top: 100px;
+  margin-bottom: 200px;
+  padding-top: 10px;
+  padding-right: 5px;
+  padding-left: 5px;
+  padding-bottom: 5px;
+  background-color: #373856;
+  text-align: center;
+}
+.Message-box-content a:visited {
+  color: red;
+}
+
+.Message-box-content .img {
+  display: block; /* Make the image a block-level element to enable margin auto */
+  margin: auto; /* Horizontally centers the block element */
+  max-width: 100%; /* Ensures the image is not wider than its container */
+  height: auto; /* Maintains aspect ratio */
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAP Scan</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <!-- Google font/icons imports-->
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Style sheet import -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='v2.css') }}">
+        <!--  Mah JS code Bank -->
+        <script src="{{ url_for('static', filename='repo.js') }}"></script>
+
+
+
+  </head>
+
+  <body class="body-pt">
+    <div class="wrapper-pt">
+      
+      <aside class="pt-aside">
+        <div class="side-banner">
+          <div class="logo-prim">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Ze Logo">
+          </div>
+          <div class="sub-logo">
+            <h2>
+              <img src="{{ url_for('static', filename='images/UVSEMS LOGO.png') }}" alt="Ze Logo">
+            </h2>
+          </div>
+        </div>
+        <div class="sidebar">
+          <a href="{{ url_for('renderPentesterDash') }}">
+            <span class="material-icons-round">dashboard</span>
+            <h3>Dashboard</h3>
+          </a>
+          <a href="{{ url_for('renderNewScan') }}">
+            <span class="material-icons-round">radar</span>
+            <h3>New Scan</h3>
+          </a>
+          <a href="#" class="active">
+            <span class="material-icons-round">flash_on</span>
+            <h3>ZAP Scan</h3>
+          </a>
+          <a href="{{ url_for('render_myscans') }}">
+            <span class="material-icons-round">history</span>
+            <h3>My Scans</h3>
+          </a>
+          <a href="{{ url_for('show_pending') }}">
+            <span class="material-icons-round">pending_actions</span>
+            <h3>Pending Scans</h3>
+          </a>
+          <a href="{{ url_for('renderRetestAlerts') }}">
+            <span class="material-icons-round">flag</span>
+            <h3>Retests Alerts</h3>
+          </a>
+          <a href="{{ url_for('render_vullib') }}">
+            <span class="material-icons-round">library_books</span>
+            <h3>CVES</h3>
+          </a>
+          <a href="{{ url_for('logout') }}">
+            <span class="material-icons-round">logout</span>
+            <h3>Logout</h3>
+          </a>
+        </div>
+      </aside>
+      <main>
+        
+        <div class="banner">
+            <h1>Pen-Tester Dashboard/ New Zap Scan</h1>
+            <hr>
+            <br>
+            <p><b>Logged in as: </b>{{ session.get('username', 'Error: 0x401') }}<p>
+            <div class="date-time" id="datetime"></div>
+            <script>
+                pushDateTime();
+            </script>
+        </div>
+        <div class="alert">
+          <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+          <b>Warning:</b> Always ensure you have explicit authorisation before initiating any scanning procedures on networks
+          not owned by you.<br>
+          Conduct your activities ethically, with a clear intention to enhance security postures without malicious intent.<br>
+          Be fully aware of and comply with all relevant legislation to avoid legal consequences. 
+          <br><br>Failure to adhere to these guidelines poses legal risks in cojunction with;<br>
+          * Criminal Justice (Offences Relating to Information Systems) Act 2017
+          <br>
+          * General Data Protection Regulation (GDPR)<br>
+          * European Union Directive on Security of Network and Information Systems (NIS Directive)
+        </div>
+        <form action="/RunZapScan" method="POST">
+          <div class="scan-card">
+            <h1>Setup the ZAP Scan Parameters</h1><br><br>
+            <div class="input-group">
+                <label for="scanId">Select a Scan to Incorporate:</label>
+                <select id="scanId" name="scanId">
+                    {% if scan_details %}
+                        {% for scan in scan_details %}
+                            <option value="{{ scan['ScanID'] }}">ID: {{ scan['ScanID'] }} [{{ scan['ScanName'] }}]</option>
+                        {% endfor %}
+                    {% else %}
+                        <option>No Scans have been found</option>
+                    {% endif %}
+                </select>
+            </div>
+              <div class="input-group">
+                  <label for="scanTarget">Scan Target (URL):</label><br>
+                  <input type="url" id="scanTarget" name="scanTarget" placeholder="https://example.com" required><br><br>
+              </div>
+              <div class="input-group">
+                  <label for="zapScanType">Scan Type:</label><br>
+                  <select id="zapScanType" name="zapScanType">
+                      <option value="1">None</option>
+                      <option value="2">Active Scan</option>
+                  </select><br>
+              </div>
+              <div class="input-group">
+                <input class="Checkbox" type="Checkbox" id="enableSpider" name="enableSpider">
+                <label for="enableSpider">Enable Spidering</label><br><br>
+            </div>
+              <div class="input-group">
+                  <label for="zapRiskLevel">Risk Level:</label><br>
+                  <select id="zapRiskLevel" name="zapRiskLevel">
+                      <option value="1">Low</option>
+                      <option value="2">Medium</option>
+                      <option value="3">High</option>
+                  </select><br><br>
+              </div>
+              <div class="input-group">
+                  <label for="exclusionList">Exclusion List (one URL per line):</label><br>
+                  <textarea id="exclusionList" name="exclusionList" rows="4" placeholder="URLs to exclude from the scan"></textarea><br><br>
+              </div>
+              <button type="submit">Start Scans</button>
+          </div>
+      </form>
+          
+      
+     
+            <br>
+        </DIV>
+      </main>
+
+    </div>
+    
+  </body>
+  <div class="footer">
+    Andrew Gilbey	&#169; SETU Carlow - Cybersecurity Y4 Project - 2024
+</div>
+</html>

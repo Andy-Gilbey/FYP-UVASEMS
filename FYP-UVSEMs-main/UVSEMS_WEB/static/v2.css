@@ -1,0 +1,1093 @@
+:root {
+    --color-primary: #252744;
+    --color-secondary: #383b69;
+    --color-tertiary: #2a2c4d;
+    --color-primary-pt: #758467;
+    --color-secondary-pt: #819171;
+    --color-tertiary-pt:#CBD5C0;
+    --color-primary-ana: #e9d700;
+    --color-secondary-ana: 	#dab600;
+    --color-tertiary-ana:#a98600;
+    --color-primary-eng: #a70000;
+    --color-secondary-eng: 	#ff0000;
+    --color-tertiary-eng:#ff5252;
+    --color-success: #50c878;
+    --color-warning: #eed202;
+    --color-error: #ff0000;
+    --color-banner: #333333;;
+    --color-blank: white;
+    --color-dark: black;
+    --color-light: #9e9e9e;
+    --color-bg: #373856;
+    --color-bg-pt: #9CAF88;
+    --color-bg-ana: #fff9ae;
+    --color-bg-eng: #ffbaba;
+    --card-border-radius: 2rem;
+    --border-radius-1: 0.4rem;
+    --border-radius-2: 0.8rem;
+    --border-radius-3: 1.0rem;
+    --card-padding: 1.8rem;
+    --padding-1: 1.2rem;
+    --padding-2: 1.4rem;
+    --padding-3: 1.6rem;
+    --box-shadow: 0 2rem 3red var(--) var(--color-light);
+ }
+
+ * {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    appearance: none;
+    border: 0;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+ 
+ html {
+    font-size: 14px;
+    font-family: "Comfortaa", sans-serif;
+ }
+ 
+ body {
+    width: 100vw;
+    height: 100vh;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-bg);
+    overflow-x: auto;
+ }
+ .body-pt {
+    width: auto;
+    height: 100vh;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-bg-pt);
+    overflow-x: auto;
+ }
+
+ .body-ana {
+    width: 99vw;
+    height: 100vh;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-bg-ana);
+    overflow-x: auto;
+ }
+
+ .body-eng {
+    width: 99vw;
+    height: 100vh;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 0.88rem;
+    background: var(--color-tertiary-eng);
+    overflow-x: auto;
+ }
+
+ /* This is required for some tables that have a metric fruit ton of data in... */
+/* Wraps the table up in a scrollable box */
+ .scrollable-table-wrapper {
+    height: 500px; 
+    overflow-y: auto; /* Enables vertical scrolling within the table container */
+    width: 100%; /* Or adjust to match the table or container width */
+
+  }
+
+  .res-scrollable-table-wrapper {
+    height: 650px; /* Adjust as needed for vertical scrolling */
+    overflow: auto; /* Enables both vertical and horizontal scrolling if content overflows */
+    padding-right: 5px;
+  }
+
+
+ .wrapper {
+    display: grid;
+    width: 95%;
+    margin: 0 auto;
+    height: 100vh;
+    background: var(--color-bg);
+    grid-template-columns: 1fr 1.8fr 2.1fr 1.1fr;
+    grid-template-rows: 0.3fr auto auto; 
+    gap: 1.5rem;
+    grid-template-columns: 15rem auto 25rem;
+
+  }
+
+  .wrapper-pt {
+    display: grid;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    background: var(--color-bg-pt);
+    grid-template-columns: 1fr 1.8fr 2.1fr 1.1fr;
+    grid-template-rows: 0.3fr auto auto; 
+    gap: 1.5rem;
+    grid-template-columns: 15rem auto 25rem;
+
+  }
+
+  .wrapper-ana {
+    display: grid;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    background: var(--color-bg-ana);
+    grid-template-columns: 1fr 1.8fr 2.1fr 1.1fr;
+    grid-template-rows: 0.3fr auto auto; 
+    gap: 1.5rem;
+    grid-template-columns: 15rem auto 25rem;
+    min-height: 100vh;
+    grid-template-columns: 15rem auto 25rem;
+    grid-template-rows: auto 1fr auto; 
+    grid-template-areas: 
+        "sidebar header header header"
+        "sidebar content content content"
+        "sidebar footer footer footer";
+    min-height: 100vh;
+
+  }
+
+
+  .wrapper-eng {
+    display: grid;
+    width: 100%;
+    margin: 0 auto;
+    height: 100%;
+    background: var(--color-tertiary-eng);
+    grid-template-columns: 1fr 1.8fr 2.1fr 1.1fr;
+    grid-template-rows: 0.3fr auto auto; 
+    gap: 1.5rem;
+    grid-template-columns: 15rem auto 25rem;
+    min-height: 100vh;
+    grid-template-columns: 15rem auto 25rem;
+    grid-template-rows: auto 1fr auto; 
+    grid-template-areas: 
+        "sidebar header header header"
+        "sidebar content content content"
+        "sidebar footer footer footer";
+    min-height: 100vh;
+
+  }
+
+ a {
+    color: var(--color-dark);
+ }
+ 
+ img {
+    display: block;
+    width: 100%;
+ }
+ 
+ h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+ }
+ h2 {
+    font-size: 1.4rem;
+ }
+
+ h3 {
+    font-size: 0.87rem;
+ }
+
+ h4 {
+    font-size: 0.8rem;
+ }
+ 
+ h5 {
+    font-size: 0.77rem;
+ }
+ 
+ .smol {
+    font-size: 0.75rem;
+ }
+
+ .text-fade{
+    color: (var(--color-light))
+ }
+ 
+ p{
+    color:(var(--color-dark));
+ }
+
+ b{
+    color:(var(--color-dark));
+ }
+ .success{
+    color:(var(--color-success));
+ }
+ .warning{
+    color:(var(--color-warning));
+ }
+ 
+ .error{
+    color:(var(--color-red));
+ }
+ 
+ aside{
+    height: auto;
+    background-color: var(--color-primary);
+ }
+ aside .side-banner {
+    background: var(--color-tertiary);
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    margin-top: 1.5rem;
+}
+
+
+aside .logo-prim img {
+    width: 8rem;
+    height: 8rem;
+}
+
+aside .close {
+    display: none;
+}
+/** Pen Tester Dash  **/
+.pt-aside{
+    height: auto;
+    margin-bottom: -10vh;
+    background-color: var(--color-primary-pt);
+ }
+.pt-aside .side-banner {
+    background: var(--color-secondary-pt);
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    margin-top: 1.5rem;
+}
+
+.pt-aside .logo-prim img {
+    width: 8rem;
+    height: 8rem;
+}
+
+.pt-aside .close {
+    display: none;
+}
+
+/** Pen Tester Dash  **/
+.ana-aside{
+    height: auto;
+    margin-bottom: -10vh;
+    background-color: var(--color-primary-ana);
+    flex-grow: 1; /* Allows the sidebar to grow */
+ }
+.ana-aside .side-banner {
+    background: var(--color-secondary-ana);
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    margin-top: 1.5rem;
+}
+
+.ana-aside .logo-prim img {
+    width: 8rem;
+    height: 8rem;
+}
+
+
+.eng-aside{
+    height: auto;
+    margin-bottom: -10vh;
+    background-color: var(--color-primary-eng);
+    flex-grow: 1; /* Allows the sidebar to grow */
+ }
+.eng-aside .side-banner {
+    background: var(--color-secondary-eng);
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center; 
+    margin-top: 1.5rem;
+}
+
+.eng-aside .logo-prim img {
+    width: 8rem;
+    height: 8rem;
+}
+
+ 
+/*************** Side Bar Styling - ADMIN ********************/
+
+aside .sidebar{
+    background: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    position: relative;
+    top: 3rem;
+}
+
+aside h3 {
+    font-weight: 500;
+}
+
+aside .sidebar a{
+    display: flex;
+    color: var(--color-blank);
+    margin: 1.2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.5rem;
+    transition: all 300ms ease;
+}
+
+aside .sidebar a span{
+    font-size: 1.5rem;
+    transition: all 250ms ease;
+}
+
+aside .sidebar a:last-child{ /** Keep the log out slapped at the bottom of the side bar */
+    position: absolute;
+    bottom: 4rem;
+    width: 90%;
+}
+
+aside .sidebar a.active{
+    background: var(--color-secondary);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+
+aside .sidebar a.active:before{
+    content: "";
+    width: 20px;
+    height: 100%;
+    background: var(--color-dark);
+
+}
+
+aside .sidebar a.subcat{
+    background: var(--color-warning);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+
+aside .sidebar a:hover {
+    background-color: var(--color-secondary);
+}
+
+aside .sidebar a:hover span{
+    margin-left: 1.5rem;
+}
+
+/*************** Side Bar Styling - PEN TESTER ********************/
+
+.pt-aside .sidebar{
+    background: var(--color-primary-pt);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    position: relative;
+    top: 3rem;
+}
+
+.pt-aside h3 {
+    font-weight: 500;
+}
+
+.pt-aside .sidebar a{
+    display: flex;
+    color: var(--color-dark);
+    margin: 1.2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.5rem;
+    transition: all 300ms ease;
+}
+
+.pt-aside .sidebar a span{
+    font-size: 1.5rem;
+    transition: all 250ms ease;
+}
+
+.pt-aside .sidebar a:last-child{ /** Keep the log out slapped at the bottom of the side bar */
+    position: absolute;
+    bottom: 4rem;
+    width: 90%;
+}
+
+.pt-aside .sidebar a.active{
+    background: var(--color-secondary-pt);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+
+.pt-aside .sidebar a.active:before{
+    content: "";
+    width: 20px;
+    height: 100%;
+    background: var(--color-dark);
+
+}
+.pt-aside .sidebar a.subcat{
+    background: var(--color-warning);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+.pt-aside .sidebar a:hover {
+    background-color: var(--color-secondary-pt);
+}
+
+.pt-aside .sidebar a:hover span{
+    margin-left: 1.5rem;
+}
+/*************** Side Bar Styling - ANALYST ********************/
+
+.ana-aside .sidebar{
+    background: var(--color-primary-ana);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    position: relative;
+    top: 3rem;
+}
+
+.ana-aside h3 {
+    font-weight: 500;
+}
+
+.ana-aside .sidebar a{
+    display: flex;
+    color: var(--color-dark);
+    margin: 1.2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.5rem;
+    transition: all 300ms ease;
+}
+
+.ana-aside .sidebar a span{
+    font-size: 1.5rem;
+    transition: all 250ms ease;
+}
+
+.ana-aside .sidebar a:last-child{ /** Keep the log out slapped at the bottom of the side bar */
+    position: absolute;
+    bottom: 15rem;
+    width: 90%;
+}
+
+.ana-aside .sidebar a.active{
+    background: var(--color-secondary-ana);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+
+.ana-aside .sidebar a.active:before{
+    content: "";
+    width: 20px;
+    height: 100%;
+    background: var(--color-dark);
+
+}
+.ana-aside .sidebar a.subcat{
+    background: var(--color-light);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+.ana-aside .sidebar a:hover {
+    background-color: var(--color-secondary-ana);
+}
+
+.ana-aside .sidebar a:hover span{
+    margin-left: 1.5rem;
+}
+
+/*************** Side Bar Styling - ENGINEER ********************/
+
+.eng-aside .sidebar{
+    background: var(--color-primary-eng);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 3rem);
+    position: relative;
+    top: 3rem;
+}
+
+.eng-aside h3 {
+    font-weight: 500;
+}
+
+.eng-aside .sidebar a{
+    display: flex;
+    color: var(--color-blank);
+    margin: 1.2rem;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    height: 3.5rem;
+    transition: all 300ms ease;
+}
+
+.eng-aside .sidebar a span{
+    font-size: 1.5rem;
+    transition: all 250ms ease;
+}
+
+.eng-aside .sidebar a:last-child{ /** Keep the log out slapped at the bottom of the side bar */
+    position: absolute;
+    bottom: 4rem;
+    width: 90%;
+}
+
+.eng-aside .sidebar a.active{
+    background: var(--color-secondary-eng);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+
+.eng-aside .sidebar a.active:before{
+    content: "";
+    width: 20px;
+    height: 100%;
+    background: var(--color-dark);
+
+}
+.eng-aside .sidebar a.subcat{
+    background: var(--color-warning);
+    color: var(--color-dark);
+    margin-left: 0;
+}
+.eng-aside .sidebar a:hover {
+    background-color: var(--color-secondary-eng);
+}
+
+.eng-aside .sidebar a:hover span{
+    margin-left: 1.5rem;
+}
+/*************** Main Content Styling ********************/
+
+main {
+    margin-top: 1.5rem;
+    flex-grow: 2;
+}
+main .banner{
+    background-color: var(--color-banner);
+    color: white;
+    padding: 25px;
+    text-align: left;
+    width: 100%;
+
+}
+main .date-time{
+    display: inline-block;
+    background: var(--color-light);
+    color: var(--color-dark);
+    border-radius: var(--border-radius-1);
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    padding: 0.5rem 1.6rem;
+}
+
+main .mcards{
+    display:grid;
+    grid-template-columns: repeat(3, 2fr);
+    gap: 1.6rem;
+}
+main .stat-card {
+    text-align: center;
+    background-color: var(--color-blank);
+    padding: var(--padding-1);
+    border-radius: var(--card-border-radius);
+    margin-top: 1.5rem;
+    box-shadow: var(--box-shadow);
+    letter-spacing: 1px; 
+    word-spacing: 2px;   
+}
+
+main .stat-card span{
+    padding: 0.5rem;
+    border-radius: 50%;
+    color: var(--color-tertiary);
+    font-size: 2.5rem;
+}
+
+main .chart-section {
+    display:grid;
+    grid-template-columns: repeat(3, 2fr);
+    gap: 1.4rem;
+}
+
+main .chart-card {
+    text-align: center;
+    background-color: var(--color-blank);
+    padding: var(--padding-3);
+    border-radius: var(--card-border-radius);
+    margin-top: 1.5rem;
+    box-shadow: var(--box-shadow);
+    letter-spacing: 1px; 
+    word-spacing: 2px;   
+}
+
+
+
+main .add-user-card {
+    text-align: left;
+    color: var(--color-dark);
+    background-color: var(--color-blank);
+    padding: var(--padding-3);
+    border-radius: var(--card-border-radius);
+    border-color: var(--color-dark);
+    margin-top: 1.5rem;
+    box-shadow: var(--box-shadow);
+    letter-spacing: 1px; 
+    word-spacing: 2px;   
+}
+
+main .add-user-card 
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group input[type="email"]{
+    width: 80%; 
+    padding: 10px;
+    margin: 6px 2px;
+    border: 1px solid var(--color-dark);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+
+
+main .add-user-card 
+.input-group select
+{
+    appearance: auto;
+    width: 80%; 
+    padding: 10px;
+    margin: 6px 2px;
+    border: 1px solid var(--color-dark);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+main .Save_User {
+    width: 400px; 
+    padding: 10px 15px; 
+    background-color: #5C6BC0;
+    color: white; 
+    border: none; 
+    border-radius: 5px; 
+    font-size: 1em; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+  }
+  
+  main .Save_User:hover {
+    background-color: #4d589b; 
+  }
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: "Noto Sans", sans-serif;
+    background-color: var(--color-blank);
+    color: var(--color-dark);
+  }
+  
+  th, td {
+    border: 0.5px solid var(--color-dark);
+    padding: 8px;
+    text-align: left;
+    width: 50px;
+  }
+  
+
+  .dataTables_wrapper {
+    color: var(--color-blank); 
+    padding: 12px;
+}
+
+.dataTables_wrapper button{
+    appearance: none;
+    background-color: #FAFBFC;
+    border: 1px solid rgba(27, 31, 35, 0.15);
+    border-radius: 6px;
+    box-shadow: rgba(133, 146, 160, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: #24292E;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    list-style: none;
+    padding: 6px 16px;
+    position: relative;
+    transition: background-color 0.2s cubic-bezier(0.3, 0, 0.5, 1);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: left;
+    white-space: nowrap;
+    word-wrap: break-word;
+    
+}
+.dataTables_wrapper button:hover{
+    background-position: -20px -20px;
+    background-color: var(--color-tertiary-pt);
+}
+.dataTables_wrapper button:disabled{
+    background-position: -20px -20px;
+    background-color: lightslategray;
+    color:var(--color-dark);
+    cursor: not-allowed;
+}
+
+.dataTables_filter {
+    margin-bottom: 15px; 
+}
+
+table.dataTable thead th {
+    text-align: left !important;
+}
+table.dataTable td, table.dataTable th {
+    text-align: left;
+  }
+
+
+/* Scan Page */
+
+main .scan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 80%; 
+    background-color: var(--color-blank);
+    padding: 20px;
+    border-radius: var(--card-border-radius);
+    margin: 1.5rem auto; 
+    box-shadow: var(--box-shadow);
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    font-size: 15px;
+    margin-bottom: 100px;
+}
+
+/* Headings within the Card */
+main .scan-card h2 {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+/* Buttons Styling */
+main .scan-card button {
+    height: 3rem;
+    min-width: 6rem; 
+    background-color: #5C6BC0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px; 
+}
+#MyScanResultsTable_filter {
+    color: black;
+    border: black;
+}
+#MyScanResultsTable_filter input[type="search"] {
+    background-color: white;
+    border: 0.5px solid black; /* Changes the border color to black */
+}
+
+#MyTaskTable_length,
+#MyTaskTable_info,
+#MyTaskTable_paginate
+{
+    color: black;
+}
+#MyReports_filter {
+    color: black;
+    border: black;
+}
+#MyReports_filter input[type="search"] {
+    background-color: white;
+    border: 0.5px solid black; /* Changes the border color to black */
+}
+
+#MyReports_length
+{
+    color: black;
+}
+
+
+#MyReports_paginate
+{
+    color: black;
+}
+#MyReports_paginate_filter {
+    color: black;
+    border: black;
+}
+#MyReports_info {
+    color: black;
+    border: black;
+}
+#MyReports_filter input[type="search"] {
+    background-color: white;
+    border: 0.5px solid black; /* Changes the border color to black */
+}
+
+
+#MyTaskTable_paginate
+{
+    color: black;
+}
+#MyTaskTable_filter {
+    color: black;
+    border: black;
+}
+#MyTaskTable_filter input[type="search"] {
+    background-color: white;
+    border: 0.5px solid black; /* Changes the border color to black */
+}
+
+
+#exportToCsv, #exportToPdf,#submitAssignment,#updateNoteSubmit,#UpdateScoreBtn,#enginBtn,#retestFlag {
+    background-color: white; /* White background */
+    color: black; /* Black text */
+    font-family: 'Roboto', 'Noto', sans-serif; /* Material Icons recommend using Roboto */
+    font-weight: 500; /* Medium text weight */
+    border: 1px solid #ccc; /* Light grey border */
+    padding: 6px 12px; /* Reduced padding inside the button for a smaller look */
+    display: flex; /* Use flexbox to align icon and text */
+    align-items: center; /* Center items vertically */
+    justify-content: center; /* Center items horizontally */
+    text-transform: none; /* Default text case */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover effects */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    font-size: 14px; /* Slightly reduced font size for text */
+}
+
+#exportToCsv:hover, #exportToPdf:hover, #retestFlag:hover, #submitAssignment:hover, #updateNoteSubmit:hover,#UpdateScoreBtn:hover,#enginBtn:hover {
+    background-color: lightgrey; /* Slightly darker background on hover */
+    border-color: #bbb; /* Darker border on hover */
+}
+
+#exportToCsv .material-icons-round, #exportToPdf .material-icons-round, #submitAssignment .material-icons-round {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 18px; /* Slightly reduced icon size */
+}
+
+#analystSelect, #PRIselect,#engineerSelect{
+    background-color: white; /* White background */
+    color: black; /* Black text */
+    font-family: 'Roboto', 'Noto', sans-serif; /* Assuming you're using Roboto or a similar sans-serif font */
+    font-weight: 500; /* Medium text weight for consistency */
+    border: 1px solid #ccc; /* Light grey border to match the button */
+    padding: 6px 12px; /* Padding for height and spacing */
+    display: inline-flex; /* Display as inline-flex to align with other inline or inline-block elements */
+    align-items: center; /* Center items vertically, useful if you add an icon inside the select */
+    justify-content: center; /* Center content (text) horizontally */
+    cursor: pointer; /* Change cursor to pointer to indicate it's clickable */
+    height: 40px; /* Explicit height to match the button (adjust as necessary) */
+    -webkit-appearance: none; /* Removes default styling on WebKit browsers */
+    -moz-appearance: none; /* Removes default styling on Firefox browsers */
+    appearance: none; /* Standard way to remove default arrow, but doesn't work in all browsers */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position for the custom arrow */
+    background-size: 24px; /* Size of the custom arrow */
+}
+
+#analystSelect:hover,#PRIselect:hover,#engineerSelect:hover {
+    background-color: lightgrey; /* Slightly darker background on hover */
+    border-color: #bbb; /* Darker border on hover */
+}
+
+label[for="analystSelect"],
+label[for="engineerSelect"] {
+    display: block; /* Ensures the label appears above the select element */
+    color: var(--color-blank); /* Text color */
+    font-weight: 500; /* Medium weight for readability */
+    margin-bottom: 8px; /* Space between the label and the select dropdown */
+    font-size: 16px; /* Adequate font size for visibility */
+}
+.selectKlass{
+    display: block; /* Ensures the label appears above the select element */
+    color: var(--color-blank); /* Text color */
+    font-weight: 500; /* Medium weight for readability */
+    margin-bottom: 8px; /* Space between the label and the select dropdown */
+    font-size: 16px; /* Adequate font size for visibility */
+}
+
+.score_Select {
+
+    font-size: 12px; /* Smaller font size */
+    border: 1px solid #000;
+
+}
+.score_Select:after {
+    content: '\25BC'; /* Down arrow symbol */
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; /* Makes the arrow click-through */
+    color: #000; /* Arrow color */
+
+}
+
+/* Optional: Add some responsiveness to the label for better alignment and spacing */
+@media (min-width: 768px) {
+    label[for="analystSelect"] {
+        display: inline-block; /* Adjust display for larger screens if necessary */
+        margin-right: 20px; /* Right margin for spacing when label is inline */
+        margin-bottom: 0; /* Adjust bottom margin for inline display */
+        vertical-align: middle; /* Aligns the label vertically with the select */
+    }
+}
+
+main .scan-card button:hover {
+    background-color: #4d589b;
+}
+
+.note-display, .timestamp-display {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    white-space: pre-wrap; /* Add this line */
+    height: 200px; /* Fixed height; adjust as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+}
+.note-display h3{
+    color: white;
+}
+.note-form textarea, .note-form button {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Input Fields Styling */
+main .scan-card .input-group input[type="text"], 
+main .scan-card .input-group input[type="url"],
+main .scan-card textarea,
+main .scan-card .input-group select {
+    width: 100%; 
+    padding: 10px;
+    margin-bottom: 15px; 
+    border: 1px solid var(--color-dark);
+    border-radius: 4px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 15px;
+}
+
+.Checkbox {
+    visibility: visible !important; 
+    opacity: 1 !important;           
+    position: relative !important;  
+    z-index: 0 !important;          
+    appearance: checkbox !important;
+    display: inline-block !important;
+}
+.footer {
+    position: fixed;
+    display:flex;
+    bottom: 0rem;
+    width: 102%;
+    height: 50px; 
+    background-color: #333333; 
+    color: white;
+    line-height: 50px; 
+    font-size: 0.8em;
+    justify-content: center;
+}
+.alert {
+    padding: 20px;
+    font-size: 15px;
+    background-color: var(--color-warning);
+    color: var(--color-dark);
+  }
+
+  .block {
+    padding: 20px;
+    font-size: 15px;
+    background-color: var(--color-blank);
+    color: var(--color-dark);
+  }
+  
+  /* The close button */
+  .closebtn {
+    margin-left: 15px;
+    color: var(--color-dark);
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  /* When moving the mouse over the close button */
+  .closebtn:hover {
+    color: var(--color-dark)
+  }
+
+  /* Error Message */ 
+.Message-box-content {
+    overflow: hidden;
+    height: auto;
+    min-height: 50vh; /* Minimum height is full viewport height */
+    min-width: 50vh;
+    width: auto;
+    color: white;
+    border: 2px solid #ccc;
+    margin-top: 100px;
+    margin-bottom: 200px;
+    padding-top: 10px;
+    padding-right: 45px;
+    padding-left: 10px;
+    padding-bottom: 5px;
+    background-color: #373856;
+    text-align: center;
+  }
+  .Message-box-content a:visited {
+    color: red;
+  }
+
+
+  /* TEst */ 
+  dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    color: var(--color-blank);
+    font-size: 13px;
+}
+dt {
+    float: left;
+    width: 100px;
+    overflow: hidden;
+    clear: left;
+    text-align: left;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    color: var(--color-blank);
+    font-size: 15;
+}
+dd {
+    float: left;
+    width: calc(100% - 100px);
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    color: var(--color-blank);
+    font-size: 15;
+}
