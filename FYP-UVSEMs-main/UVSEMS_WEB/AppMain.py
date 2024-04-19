@@ -39,10 +39,10 @@ stathand = StatisticsHandler(dbConnection)
 # setup cookie
 with open('9e83d8.enc', 'r') as file:
     app.config['SECRET_KEY'] = file.read().strip()
-app.config['SESSION_COOKIE_NAME'] = 'UVSEMSsession'
+app.config['SESSION_COOKIE_NAME'] = "UVSEMSsession"
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = True  
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
