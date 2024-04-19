@@ -21,9 +21,7 @@ def hash_salt_pw(password):
             bytes: The resulting hashed and salted password.
         """
     
-        # Generate a nice salt
         salt = bcrypt.gensalt()
-        # Hash the password with the salt..
         hashed_Pw = bcrypt.hashpw(password.encode(), salt)
         return hashed_Pw
 

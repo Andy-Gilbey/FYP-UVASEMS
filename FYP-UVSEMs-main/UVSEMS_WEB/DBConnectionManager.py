@@ -20,7 +20,6 @@ class DBConnectionHandler:
         self.keyBankDatabase = configs.keyBankDatabase
 
 
-#### Notes to self:
 #### Use (prepared=True) for Prepared statements
 #### Init cursor, set query var, execute, pull result from cursor / fetcone() or fetchall() 
 #### finally block close cursor, close connection

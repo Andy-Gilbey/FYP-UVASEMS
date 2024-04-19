@@ -70,12 +70,12 @@ class ScanUtils:
         """
         # Initialise the dictionary to store all DNS records.
         # Each record type (NS, A, TXT, MX) requires a specific list to store the records
-        # Initialize the dictionary to store all DNS records with sets to avoid duplicates.
+        # Initialise the dictionary to store all DNS records with sets to avoid duplicates.
         dns_records = {'NS': set(), 'A': set(), 'TXT': set(), 'MX': set()}
 
         # Loop through each DNS server.
         for server in servers:
-            # Configure a new resolver for each server.
+            # Configure a new resolver for each server in list
             resolver = dns.resolver.Resolver()
             resolver.nameservers = [server]
             resolver.timeout = 12
@@ -87,13 +87,10 @@ class ScanUtils:
                     results = resolver.resolve(domain, record_type)
                     for result in results:
                         if record_type == 'A':
-                            # Include the IP address and TTL for 'A' records
                             result_string = f"{result.address} (TTL: {results.rrset.ttl})"
                         elif record_type == 'MX':
-                            # Include the mail exchange and priority for 'MX' records
                             result_string = f"{result.exchange} (Priority: {result.preference})"
                         else:
-                            # Default formatting for other types
                             result_string = str(result)
 
                         dns_records[record_type].add(result_string)
@@ -101,7 +98,6 @@ class ScanUtils:
                 except Exception as e:
                     print(f"Error pulling {record_type} records from {server}: {e}")
 
-        # Convert sets to lists to maintain the return type as a dictionary of lists.
         return {rtype: list(records) for rtype, records in dns_records.items()}
 
 
@@ -198,12 +194,11 @@ class ScanUtils:
         cursor = connection.cursor(prepared=True)
         try:
             for port, data in nmapres.get('tcp', {}).items():
-                # Individual fields to be encrypted
                 ip_address = nmapres.get('addresses', {}).get('ipv4', 'N/A')
                 hostname = nmapres.get('hostnames', [{'name': 'N/A'}])[0].get('name', 'N/A')
                 os_fingerprint = ', '.join([os.get('name', 'N/A') for os in nmapres.get('osmatch', [])]) or 'N/A'
 
-                # Encrypt the fields
+
                 key, nonce = generate_keynonce()
                 encrypted_ip_address = encrypt_data(ip_address, key, nonce)
                 encrypted_hostname = encrypt_data(hostname, key, nonce)
@@ -212,7 +207,6 @@ class ScanUtils:
                 key64 = base64.b64encode(key).decode('utf-8')
                 nonce64 = base64.b64encode(nonce).decode('utf-8')
 
-                # Insert the encrypted data into the database
                 insert_query = "INSERT INTO NmapResults (ScanID, IPAddress, Hostname, Port, Protocol, ServiceName, ServiceVersion, State, OSFingerPrint, StartTime, ScanType, EndTime) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())"
                 cursor.execute(insert_query, (
                     scan_id,
@@ -230,7 +224,6 @@ class ScanUtils:
                 nmap_record_id = cursor.lastrowid
                 connection.commit()
 
-                # Save the encryption key and nonce
                 if not self.save_nmap_encryption_key(nmap_record_id, key64, nonce64):
                     raise Exception("Failed to save encryption key and nonce at the function level")
 
@@ -250,27 +243,25 @@ class ScanUtils:
         default_port_list_id = "33d0cd82-57c6-11e1-8ed1-406186ea4fc5"
         default_scanner_id = "6acd0832-df90-11e4-b9d5-28d24461215b"
 
-    ### FOR TESTING ONLY - MAKE SURE TO CHANGE THIS LATER IT IS NOT SECURE SLAPPING THE PASSWORD IN THE CODE LIKE THIS ####
+    ### #############
         socket_path = '/run/gvmd/gvmd.sock'
         openvas_username = 'admin'
         openvas_password = 'cfdf530c-c131-4eec-84b7-1115838c3564'
-    ### FOR TESTING ONLY - MAKE SURE TO CHANGE THIS LATER IT IS NOT SECURE SLAPPING THE PASSWORD IN THE CODE LIKE THIS ####
+    ### #############
 
 
-        # Initialize connection
+        # Initialise connection to GVMD first
         connection = UnixSocketConnection(path=socket_path)
         with Gmp(connection) as gmp:
-            # Authenticate with GVM
-            gmp.authenticate(openvas_username, openvas_password)
+            gmp.authenticate(openvas_username, openvas_password)  
 
-            # Create the target
             response = gmp.create_target(name=f"{task_name} Target", hosts=[target_ip], port_list_id=default_port_list_id)
             root_xml = ET.fromstring(response)
-            target_id = root_xml.attrib.get('id')
+            target_id = root_xml.attrib.get('id')# Create the target
             if not target_id:
-                raise Exception("Failed to create target")
+                raise Exception("Failed to create target") 
 
-            # Create the task
+            ## Create the task
             response = gmp.create_task(name=task_name, config_id="daba56c8-73ec-11df-a475-002264764cea", target_id=target_id, scanner_id=default_scanner_id)
             root_xml = ET.fromstring(response)
             task_id = root_xml.attrib.get('id')
@@ -281,45 +272,39 @@ class ScanUtils:
 
 
     def start_VAS(self, task_id, port_list_id, scanner_id):
-        ### Ensure secure handling of credentials and connection details ###
+    ### #############
         socket_path = '/run/gvmd/gvmd.sock'
         openvas_username = 'admin'
         openvas_password = 'cfdf530c-c131-4eec-84b7-1115838c3564'
-
-        # Initialize connection
+    ### #############
         connection = UnixSocketConnection(path=socket_path)
         with Gmp(connection) as gmp:
-            # Authenticate with GVM
-            gmp.authenticate(openvas_username, openvas_password)
+            gmp.authenticate(openvas_username, openvas_password)  # Authenticate GVM now
 
-            # Modify the task with the new scanner ID
             gmp.modify_task(task_id=task_id, scanner_id=scanner_id)
 
-            # Retrieve the task to get the target ID
             task_response = gmp.get_task(task_id)
-            
-            # Assuming the response is XML, parse it to find the target ID
+        
             task_xml = ET.fromstring(task_response)
             target_id_element = task_xml.find('.//target')
             if target_id_element is not None:
                 target_id = target_id_element.get('id')
                 
-                # Modify the target with the new port list
                 gmp.modify_target(target_id=target_id, port_list_id=port_list_id)
             else:
                 raise ValueError("Target ID not found in task response.")
 
-            # Start the task with the updated configurations
+            # Start the task with the updated configs
             gmp.start_task(task_id)
 
             return f"Scan task started with task ID {task_id}"
 
     def snatch_VAS_reports():
-    ### FOR TESTING ONLY - MAKE SURE TO CHANGE THIS LATER IT IS NOT SECURE SLAPPING THE PASSWORD IN THE CODE LIKE THIS ####
+    ### ####
         socket_path = '/run/gvmd/gvmd.sock' 
         openvas_username = 'admin'
         openvas_password = 'cfdf530c-c131-4eec-84b7-1115838c3564'
-    ### FOR DEBUGGING ONLY - MAKE SURE TO CHANGE THIS LATER IT IS NOT SECURE SLAPPING THE PASSWORD IN THE CODE LIKE THIS ####
+    ### ####
 
         reports = []
         # COnfigure the connection comm end point for IPC on this host machine - a way for the different
@@ -339,19 +324,19 @@ class ScanUtils:
                     tasks_xml = gmp.get_tasks()  # Get the XML for all tasks
                     tasks = transform(tasks_xml)  # Transform XML to something more workable
 
-                    # Iterate through each task to get the last report
+                    # loop through each task to get the last report
                     for task in tasks.findall('task'):
                         last_report = task.find('last_report/report')
                         
-                        # Only continue if there is a last report
+                        # only move on if there is a last report
                         if last_report is not None:
                             report_id = last_report.get('id')
                             
-                            # Fetch the report details
+                            # get all the report details
                             report_xml = gmp.get_report(report_id)
                             report_tree = transform(report_xml)
 
-                            # Create a dictionary for each report
+                            # create a dictionary for each report
                             report = {
                                 'date': report_tree.findtext('report/creation_time'),
                                 'status': task.findtext('status'),
@@ -364,15 +349,15 @@ class ScanUtils:
                                 'false_positive': report_tree.findtext('report/result_count/false_positive')
                             }
 
-                            # Append the report dictionary to the reports list
+                            # append on the report dictionary to the reports list
                             reports.append(report)
 
-                    # Return the reports list after all tasks are processed
+                    # return the reports list after all tasks are processed
                     return reports
 
         except Exception as e:
                 print(f"Error while fetching reports: {e}")
-                return []  # Return an empty list in case of an error
+                return []  # return an empty in case of error
             
     def get_scans_by_user(self, user_id):
         connection = self.dbConnection.createConnection()
@@ -446,18 +431,12 @@ class ScanUtils:
             connection = psycopg2.connect(dbname="gvmd", user="superuser", password="pass")
             
             cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-            # Example query to fetch NVT details
             query = """
                 SELECT name, comment, description, creation_time, modification_time, cvss_vector, severity
                 FROM scap.cves
                 LIMIT 1000;  -- This limit is important, you can maximise it but.......risque
-            """
-            
-            # Execute the query
+            """  
             cursor.execute(query)
-            
-            # Fetch all rows as a list of dictionaries
             cve_details = cursor.fetchall()
             
             # Close the cursor and connection
@@ -465,7 +444,7 @@ class ScanUtils:
             connection.close()
             
             for cve in cve_details:
-                # Convert Unix timestamps to datetime objects
+                # Convert Unix timestamps to datetime objects so it works
                 cve['creation_time'] = datetime.datetime.fromtimestamp(cve['creation_time'])
                 cve['modification_time'] = datetime.datetime.fromtimestamp(cve['modification_time'])
 
@@ -481,20 +460,13 @@ class ScanUtils:
             connection = psycopg2.connect(dbname="gvmd", user="superuser", password="pass")
             cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-            # Query to count NVTs by severity
             query = """
                 SELECT severity, COUNT(*) as count
                 FROM scap.cves
                 GROUP BY severity
             """
-            
-            # Execute the query
             cursor.execute(query)
-            
-            # Fetch all rows as a list of dictionaries
             cve_counts = cursor.fetchall()
-            
-            # Close the cursor and connection
             cursor.close()
             connection.close()
 
@@ -505,7 +477,6 @@ class ScanUtils:
             
     def snatch_CVES_by_time():
             try:
-                    ## Create a connection to gvmd database
                     connection = psycopg2.connect(dbname="gvmd", user="superuser", password="pass")
                     cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -537,12 +508,9 @@ class ScanUtils:
                                 END
                             """
                     
-                    # Execute the query
+
                     cursor.execute(query)
-                    
-                    # Fetch all rows as a list of dictionaries
                     cve_counts = cursor.fetchall()
-                    # Close the cursor and connection
                     cursor.close()
                     connection.close()
 
@@ -554,7 +522,6 @@ class ScanUtils:
 
     def snatch_CVES_by_year():
             try:
-                    ## Create a connection to gvmd database
                     connection = psycopg2.connect(dbname="gvmd", user="superuser", password="pass")
                     cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
@@ -564,13 +531,9 @@ class ScanUtils:
                         GROUP BY year
                         ORDER BY year;
                             """
-                    
-                    # Execute the query
+
                     cursor.execute(query)
-                    
-                    # Fetch all rows as a list of dictionaries
                     cve_by_years = cursor.fetchall()
-                    # Close the cursor and connection
                     cursor.close()
                     connection.close()
 
@@ -608,7 +571,7 @@ class ScanUtils:
                 key, nonce = result
                 key = base64.b64decode(key)
                 nonce = base64.b64decode(nonce)
-                # print(f"NmapResID: {nmap_res_id}, NmapResKey: {key}, NmapResNonce: {nonce}")  # Debugging Diagnostic
+                # print(f"NmapResID: {nmap_res_id}, NmapResKey: {key}, NmapResNonce: {nonce}")  # Debugging 
                 return key, nonce
             else:
                 print(f"NmapResID {nmapRecordID} not found in the NmapResults database.")
@@ -680,7 +643,6 @@ class ScanUtils:
 
         cursor = keybank_connection.cursor()
         try:
-            # Insert the key and nonce associated with the DNS record ID
             insertKeyAndNonceQuery = "INSERT INTO DNSBank (DNSRecordID, `DNSRecordKey`, DNSRecordNonce) VALUES (%s, %s, %s)"
             cursor.execute(insertKeyAndNonceQuery, (dnsRecordId, key, nonce))
             keybank_connection.commit()
@@ -716,7 +678,6 @@ class ScanUtils:
 
         cursor = keybank_connection.cursor()
         try:
-            # Insert the key and nonce associated with the DNS record ID
             insertKeyAndNonceQuery = "INSERT INTO NmapBank (NmapResID, `NmapResKey`, NmapResNonce) VALUES (%s, %s, %s)"
             cursor.execute(insertKeyAndNonceQuery, (nmapRecordID, key, nonce))
             keybank_connection.commit()
@@ -774,7 +735,6 @@ class ScanUtils:
                 dns_record_id = cursor.lastrowid
                 connection.commit()      
                 
-                 # Save the encryption key and nonce
                 if not self.save_dns_encryption_key(dns_record_id, key64, nonce64):
                     raise Exception("Failed to save encryption key and nonce at the function level")
             return True
@@ -952,8 +912,6 @@ class ScanUtils:
                     """
 
             for detail in details:
-                # Assuming 'date' is the Unix timestamp field from your details
-                # Convert Unix timestamp (assumed to be in seconds) to datetime
                 time = datetime.datetime.fromtimestamp(int(detail['date']))
 
                 data = (
@@ -1042,12 +1000,11 @@ class ScanUtils:
         try:
             zap = ZAPv2(apikey='bpcvbfh9imout5rheegkmbjvn9', proxies={'http': 'http://127.0.0.1:8080'})
             api_key = 'bpcvbfh9imout5rheegkmbjvn9'
-            # Make a New Session
-            session_name = f"scan_session_{scanID}"  # Example session name, customize as needed
+            session_name = f"scan_session_{scanID}" 
             zap.core.new_session(name=session_name, overwrite=True)
             print(f"New ZAP session created: {session_name}")
             
-            # Configure exclusions
+            # Configure all exclusions frm list
             for url in exclusion_list:
                 zap.spider.exclude_from_scan(url)
                 zap.ascan.exclude_from_scan(url)
@@ -1058,25 +1015,22 @@ class ScanUtils:
                 print(f"Spider scan initiated with ID: {spider_scan_id}")
                 while int(zap.spider.status(spider_scan_id)) < 100:
                     print("Spider progress %: {}".format(zap.spider.status(spider_scan_id)))
-                    time.sleep(2)  # Pause execution for 2 seconds between checks
+                    time.sleep(2)  # pause the execution for 2 seconds between checks
 
                 print("Spider scan completed.")
                 spider_result_ids = zap.spider.results(spider_scan_id)  
                 print(f"Spider found the following URLs: {spider_result_ids}")
                 response = requests.get(f'http://127.0.0.1:8080/JSON/core/view/messages/?apikey={api_key}')
                 organized_data = {} 
-                # Check if the request was successful
+                # check if request was successful
                 if response.status_code == 200:
                     data = response.json()
 
                     for message in data['messages']:
-                        # Extract method, status code, timestamp, and user agent
                         method = message['requestHeader'].split(' ')[0]
                         status_code = message['responseHeader'].split(' ')[1]
                         timestamp = datetime.datetime.fromtimestamp(int(message['timestamp'])/1000).strftime('%Y-%m-%d %H:%M:%S')
                         user_agent = next((line.split(': ')[1] for line in message['requestHeader'].split('\n') if 'User-Agent' in line), 'Unknown')
-                        
-                        # Simplified URL extraction for demonstration
                         url = message['requestHeader'].split(' ')[1]
 
                         if url not in organized_data:
@@ -1091,20 +1045,18 @@ class ScanUtils:
                     print(f"Failed to fetch data, status code: {response.status_code}")            
 
       ###############      
-            # Run the active scan if requested
             if zap_scan_type == "2":  # Active scan
                 scan_id = zap.ascan.scan(scan_target)
-                if scan_id and scan_id != 'url_not_found':  # Check if scan ID is valid
+                if scan_id and scan_id != 'url_not_found':  
                     print(f"Active scan initiated with ID: {scan_id}")
                     while int(zap.ascan.status(scan_id)) < 100:
-                        time.sleep(5)  # Pause execution for 5 seconds between checks
+                        time.sleep(5)  # pause execution for 5 seconds between thd checks
                     print("Active scan completed using policy:")
                 else:
                     print("Failed to initiate active scan. Scan target URL not found.")
             else:
                 print("Invalid scan type specified.")
 
-            # Fetch and print scan results
             print("Scan completed for target: {}".format(scan_target))
             alerts = zap.core.alerts(baseurl=scan_target)
             num_alerts = len(alerts)
@@ -1139,10 +1091,8 @@ class ScanUtils:
 
         cursor = connection.cursor(prepared=True)
         try:
-            # Prepare the insert queries for the crawler and results
             insertScanResultQuery = "INSERT INTO Zap_Results (ScanID, Owner, Timestamp, Alert, URL, Risk, Detail) VALUES (%s, %s, NOW(), %s, %s, %s, %s)"
             insertSpiderQuery = "INSERT INTO Spider (URL, ScanID, StatusCode, TimeStamp, Method) VALUES (%s, %s, %s, %s, %s)"
-            
             
             for alert in alerts:
                 cursor.execute(
@@ -1162,11 +1112,11 @@ class ScanUtils:
                     cursor.execute(
                         insertSpiderQuery,
                         (
-                            url,  # URL from the loop
-                            ScanID,  # Presumed to be defined earlier in your script
-                            message['status_code'],  # StatusCode from message
-                            message['timestamp'],  # TimeStamp from message
-                            message['method'],  # Method from message
+                            url, 
+                            ScanID,  
+                            message['status_code'],  
+                            message['timestamp'],  
+                            message['method'],  
                         ),
                     )
             connection.commit()
@@ -1271,13 +1221,12 @@ class ScanUtils:
             cursor.execute(query, (owner_id,))
             rows = cursor.fetchall()
             
-            # Initialize counters
+
             nmap_count = 0
             dns_count = 0
             vas_count = 0
             zap_count = 0
-
-            # Iterate through each scan to increment the counters
+            
             for row in rows:
                 if row['NMap']:  # For NMap
                     nmap_count += 1
@@ -1397,7 +1346,7 @@ class ScanUtils:
 
         try:
             connection = self.dbConnection.createConnection()
-            cursor = connection.cursor(prepared=True, dictionary=True)  # Ensure you fetch results as dictionaries
+            cursor = connection.cursor(prepared=True, dictionary=True)  
             query = """
                     SELECT s.ScanID, s.Owner,
                         nr.IPAddress, nr.Hostname, nr.Port, nr.Protocol, nr.ServiceName, nr.ServiceVersion, nr.State, nr.OSFingerPrint, nr.StartTime, nr.EndTime, nr.ScanType,
@@ -1415,9 +1364,9 @@ class ScanUtils:
                     """
             cursor.execute(query, (scan_id,))
             rows = cursor.fetchall()
-            connection.commit()  # Commit the transaction
+            connection.commit()  
             
-            # Convert rows to a list of dictionaries
+
             scans_list = []
             for row in rows:
                 scan_data = {
@@ -1564,16 +1513,16 @@ class ScanUtils:
             connection = self.dbConnection.createConnection()
             cursor = connection.cursor(prepared=True)
 
-            # Construct the note with timestamp
+            # construct the note with timestamp
             timestamp = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
             updated_notes = f"[{timestamp}]: {notes}"
 
-            # Retrieve existing notes
+            # get all existing notes
             select_query = "SELECT AnaNotes FROM ScanNotes WHERE ScanID = %s"
             cursor.execute(select_query, (scan_id,))
             existing_notes = cursor.fetchone()
 
-            # Combine existing and new notes
+            # concat old and new notes
             if existing_notes and existing_notes[0]:
                 updated_notes = existing_notes[0] + "\n" + updated_notes
 
@@ -1676,12 +1625,11 @@ class ScanUtils:
                 WHERE ScanID = %s
             """
             cursor.execute(query, (scan_id,))
-            # Fetch the result
             result = cursor.fetchone()
             if result:
-                return result[0]  # Return the actual status
+                return result[0]  
             else:
-                return None  # Or an appropriate value indicating no result found
+                return None  
         except Exception as e:
             print(f"Error Finding status: {e}")
             return None

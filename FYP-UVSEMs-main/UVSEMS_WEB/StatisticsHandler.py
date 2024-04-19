@@ -11,7 +11,7 @@ class StatisticsHandler:
         connection = self.dbConnection.createConnection()
         try:
             cursor = connection.cursor(prepared=True)
-            # Calculate 7 days ago, not including today
+            # Calculate 7 days ago, NOT  inc today
             seven_days_ago = datetime.now() - timedelta(days=7)
             
             query = """
@@ -83,7 +83,6 @@ class StatisticsHandler:
         
         try:
             cursor = connection.cursor(dictionary=True)
-            # This query should be adjusted based on your schema and requirements
             query = """
                     SELECT
                     CEIL(vr.Severity) as RoundedSeverity, COUNT(*) as Count
@@ -98,8 +97,6 @@ class StatisticsHandler:
                     """
             cursor.execute(query, (owner_id,))
             rows = cursor.fetchall()
-            
-            # Aggregate counts by severity
             severity_counts = {int(row['RoundedSeverity']): row['Count'] for row in rows}
             return severity_counts
         
@@ -133,8 +130,6 @@ class StatisticsHandler:
                     """
             cursor.execute(query, (owner_id,))
             rows = cursor.fetchall()
-            
-            # Aggregate those counts
             risk_counts = {row['Risk']: row['Count'] for row in rows}
             return risk_counts
         

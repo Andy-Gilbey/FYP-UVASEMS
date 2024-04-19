@@ -44,7 +44,7 @@ class DataViz:
         buf.close()
         image64 = base64.b64encode(imagePng)
         imageStr = image64.decode('utf-8')
-        plt.close(fig)  # DOn't forget this Close the plot to free up the memory
+        plt.close(fig)  # DOn't forget this Close the plot to free up the memory on every chart
         return imageStr
     
     def bake_a_pie_actions(data):

@@ -10,10 +10,10 @@ class Audit:
     def log_audit_entry(self, user_id, action, description, ip_address, browser_info, severity_level, category, details):
         """
         The master function to log - Takes every parameter which can be customised based on action.
-        The data is encrypted when it flows into the db
+        The data is encrypted when it is passed into the db
         v.01
 
-        Parameters:
+        Args:
         - user_id (str): The ID of the user associated with the audit log.
         - action (str): The action performed by the user.
         - description (str): A description of the action.
@@ -23,8 +23,6 @@ class Audit:
         - category (str): The category of the action.
         - details (str): Detailed information about the action.
 
-        The function encrypts sensitive fields before storing them and logs encryption keys in a separate table.
-        It uses transactions to ensure that all or none of the changes are committed to the database.
         """
 
         connection = self.dbConnection.createConnection()
@@ -87,30 +85,27 @@ class Audit:
 
         cursor = connection.cursor()
         try:
-            # Generate key and nonce for encryption
             key, nonce = generate_keynonce()
 
-            # Encrypt the fields
             encryptedAction = encrypt_data('Invalid Login Attempt', key, nonce)
             encryptedDescription = encrypt_data('Attempt to log in with invalid credentials', key, nonce)
             encryptedIPAddress = encrypt_data(ipAddress, key, nonce)
             encryptedDetails = encrypt_data(details, key, nonce)
             encryptedCategory = encrypt_data(category, key, nonce)
 
-            # Log the invalid login attempt with encrypted details
             query = """
             INSERT INTO AuditLog (Action, Description, IPAddress, Details, Category)
             VALUES (%s, %s, %s, %s, %s)
             """
             cursor.execute(query, (encryptedAction, encryptedDescription, encryptedIPAddress, encryptedDetails, encryptedCategory))
-            log_id = cursor.lastrowid  # Get the auto-incremented LogID
+            log_id = cursor.lastrowid  
             connection.commit()
 
-            # Convert key and nonce to Base64 for storage
+            # Convert the key and nonce to Base64 for storage otherwise bad times
             key64 = base64.b64encode(key).decode('utf-8')
             nonce64 = base64.b64encode(nonce).decode('utf-8')
 
-            # Save key and nonce in KeyLog table
+
             self.save_encryption_logKey(log_id, key64, nonce64)
             
         except Error as e:
@@ -180,7 +175,7 @@ class Audit:
 
         cursor = connection.cursor()
         try:
-            query = "SELECT `Key`, `Nonce` FROM LogKey WHERE LogID = %s" # DON'T FORGET THE ` FOR KEYWORDS (KEY FOR EXAMPLE)
+            query = "SELECT `Key`, `Nonce` FROM LogKey WHERE LogID = %s" # DON'T FORGET THE ` FOR KEYWORDS 
             cursor.execute(query, (log_id,))
             result = cursor.fetchone()
 
@@ -188,7 +183,7 @@ class Audit:
                 key, nonce = result
                 key = base64.b64decode(key)
                 nonce = base64.b64decode(nonce)
-               # print(f"DLog ID: {log_id}, DKey: {key}, DNonce: {nonce}")  # Debugging Diagnostic
+               # print(f"DLog ID: {log_id}, DKey: {key}, DNonce: {nonce}")  # Debugging 
                 return key, nonce
             else:
                 print(f"Log ID {log_id} not found in the LogKey database.")
@@ -217,16 +212,13 @@ class Audit:
             for log in logs:
                 log_id, encrypted_action = log
 
-                # Retrieve encryption key and nonce for this log entry
                 key, nonce = self.pull_encryption_key(log_id)
                 if key is None or nonce is None:
                     print(f"Cannot get the key or nonce for specified log ID {log_id}")
-                    continue  # Skip this log
+                    continue  
 
-                # Decrypt the action
                 decrypted_action = decrypt_data(encrypted_action, key, nonce)
-
-                # Count the actions
+                #
                 if decrypted_action in action_counts:
                     action_counts[decrypted_action] += 1
                 else:
@@ -266,29 +258,23 @@ class Audit:
 
         cursor = connection.cursor()
         try:
-            # Generate key and nonce for encryption
             key, nonce = generate_keynonce()
 
-            # Encrypt the fields
             encryptedAction = encrypt_data('User Data Change', key, nonce)
             encryptedDescription = encrypt_data(description, key, nonce)
             encryptedCategory = encrypt_data(category, key, nonce)
             encryptedDetails = encrypt_data(details, key, nonce)
 
-            # Log the user data change with encrypted details
             query = """
             INSERT INTO AuditLog (UserID, Action, Description, Category, Details)
             VALUES (%s, %s, %s, %s, %s)
             """
             cursor.execute(query, (changer_user_id, encryptedAction, encryptedDescription, encryptedCategory, encryptedDetails))
-            log_id = cursor.lastrowid  # Get the auto-incremented LogID
+            log_id = cursor.lastrowid  
             connection.commit()
-
-            # Convert key and nonce to Base64 for storage
             key64 = base64.b64encode(key).decode('utf-8')
             nonce64 = base64.b64encode(nonce).decode('utf-8')
 
-            # Save key and nonce in KeyLog table
             self.save_encryption_logKey(log_id, key64, nonce64)
             
         except Error as e:
@@ -402,7 +388,7 @@ class Audit:
             """
             cursor.execute(query, (owner,))
             result = cursor.fetchall()
-            connection.commit()  # Commit the transaction
+            connection.commit()  
             return result
         except Error as e:
                 #connection.rollback()

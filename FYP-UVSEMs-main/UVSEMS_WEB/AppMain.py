@@ -23,11 +23,7 @@ from ScanUtils import ScanUtils
 app = Flask(__name__)
 
 
-
-
-
-
-# Create the class instances
+#############  Create the class instances #############
 configs = Configurations()
 dbConnection = DBConnectionHandler(configs)
 userManager = UserDataManager(dbConnection)
@@ -36,13 +32,13 @@ scanUtil = ScanUtils(dbConnection)
 reshand = ResultsHandler(dbConnection)
 stathand = StatisticsHandler(dbConnection)
 
-# setup cookie
+#############  Cookie Setup #############
 with open('9e83d8.enc', 'r') as file:
     app.config['SECRET_KEY'] = file.read().strip()
-app.config['SESSION_COOKIE_NAME'] = "UVSEMSsession"
+app.config['SESSION_COOKIE_NAME'] = 'UVSEMSsession'
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SECURE'] = True  
-app.config['SESSION_COOKIE_SAMESITE'] = "Lax"
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 
@@ -53,7 +49,7 @@ else:
     raise Exception("Secret key Error")
 
 
-# Dictionary mapping status codes to their messages and image paths
+# Dictionary mapping status codes to their messages and the image paths
 error_info = {
     400: {
         "code": 400,
@@ -94,10 +90,6 @@ error_info = {
 
 @app.after_request
 def add_headers(response):
-    # Content Security Policy (CSP) header, this breaks everything so is disabled right now, until I can mend it if given time
-    # The reason is some of the CSS is external so they must all be whitelisted
-    #response.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self' https://maxcdn.bootstrapcdn.com;"
-
     response.headers['Cache-Control'] = "no-cache, no-store, must-revalidate"
     response.headers['Pragma'] = "no-cache"
     response.headers['Expires'] = "0"
@@ -106,8 +98,6 @@ def add_headers(response):
     response.headers['Referrer-Policy'] = "no-referrer-when-downgrade"
     response.headers['X-XSS-Protection'] = "1 mode block"
     return response
-
-
 
 
 def role_required(*roles):
@@ -142,7 +132,6 @@ def handle_error(error):
 
     return render_template('Error.html', code=error_code, message=error_details["message"], image_url=image_url), error_code
 
-
 @app.route("/")
 def login():
     session['start'] = True
@@ -172,7 +161,6 @@ def loginPost():
 
     
     result = userManager.validate_login(username, password)
-
     if result.get('success', False):
         session['authenticated'] = True
         session["username"] = username
@@ -232,7 +220,6 @@ def renderPentesterDash():
     risk = stathand.get_zap_risk_owner(user_id)
     pie_a = DataViz.bake_scan_bars_sev(sev)
     pie_b = DataViz.bake_pie_risks(risk)
-
     re_alert_count = scanUtil.get_retests_count(user_id)
     nmap_count,dns_count, vas_count, zap_count = scanUtil.count_all_scan_types(user_id)
     recon = nmap_count + dns_count
@@ -361,16 +348,13 @@ def create_task_and_scan():
     return render_template('Message.html', message=confirmation_message)
 
 
+# add docstrings here - this app route is big
 @app.route('/RunScan', methods=['POST'])
 def run_scan():
     """
-    Handles the request to start up a scan process based on form data submitted by the user.
-    It first checks if a scan with the given name already exists in the database to ensure that only one exists.
-    If the scan name exists, it redirects to an error message page. Otherwise, it continues forward with the scan.
-    
-    The function includes creating a new scan task, performing DNS lookups if a domain is provided,
-    starting Nmap scans if an IP address and scan type are provided, and starting a VAS scan if
-    the conditions are met (recon_only flag is not set and both portlist and scanner are provided).
+    Starts up a scan process based on form data submitted by the user.
+    It checks if a scan with the submitted name already exists in the database to ensure that only one exists.
+    If the scan name exists, it redirects to an error message page. else, it continues forward with the scan.
     
     Args:
         task_name (str): The name of the task to be created, extracted from the form data.
@@ -386,6 +370,7 @@ def run_scan():
         A redirect to 'NewScan.html' upon successful initiation of the scan process or if any part of the process fails
         without a conflicting scan name.
     """
+    
     task_name = request.form['taskName']
     target_ip = request.form['scanTarget']
     domain = request.form.get('domain')
@@ -549,12 +534,12 @@ def renderMyResults():
     
 @app.route('/dlreport/<int:report_id>')
 def dlreport(report_id):
-    pdf_bytes_io = reshand.get_dl_report(report_id)  # This is already an io.BytesIO object
+    pdf_bytes_io = reshand.get_dl_report(report_id)  
     
     if pdf_bytes_io:
         return send_file(
-            pdf_bytes_io,  # Pass the io.BytesIO object directly
-            mimetype='application/pdf',  # Specify the MIME type
+            pdf_bytes_io,  
+            mimetype='application/pdf',  
             as_attachment=True,
             download_name=f"report_{report_id}.pdf"
         )
@@ -629,8 +614,6 @@ def generate_report(scan_id):
         print(f"error serving the pdf file: {str(e)}")
         abort(500)  
 
-
-
 @app.route("/scanResults/<int:scan_id>")
 @role_required(1,2)
 def render_scan_resby(scan_id):
@@ -664,7 +647,7 @@ def render_scan_resby(scan_id):
     # If there's an assigned analyst, reorder the list to make them appear first
     # Find the analyst in the list
     # Remove the assigned analyst from their current position
-    # Insert the assigned analyst at the beginning of the list
+    # put the assigned analyst at the beginning of the list
     if assigned_analyst_id is not None:
 
         assigned_analyst = next((analyst for analyst in analysts if analyst['UserID'] == assigned_analyst_id), None)
@@ -780,9 +763,9 @@ def render_scaneng_resby(scan_id):
                 analyst_notes_last_update = scan.get('AnaNotesTimestamp', 'Not Updated')
                 my_notes = scan.get('EngNotes', 'No notes available.')
                 my_notes_last_update = scan.get('EngNotesTimeStamp', 'Not Updated')
-                print(analyst_notes_last_update)
+                #print(analyst_notes_last_update)
                 priority = scan.get('Priority', 'Default Priority')
-                print(priority)
+                #print(priority)
                 
                 break  
             
@@ -829,16 +812,15 @@ def update_analyst_scores():
         cursor = connection.cursor(prepared=True)
         for key, score in request.form.items():
             if score not in ['None', 'Low', 'Medium', 'High', 'Ignore']:
-                continue  # Skip invalid or irrelevant form fields
+                continue  # jmp over
 
             parts = key.split('_')
             if len(parts) != 3 or parts[1] != 'score':
-                continue  # Ensure the form field follows the naming convention
+                continue  
 
             table_abbr = parts[0]
             record_id = parts[2]
 
-            # Map the abbreviation to the actual table name and primary key column
             table_mapping = {
                 'nmap': ('NmapResults', 'NmapResID'),
                 'dns': ('DNSRecords', 'DNSRecordID'),
@@ -849,16 +831,15 @@ def update_analyst_scores():
 
             if table_abbr in table_mapping:
                 table_name, primary_key_column = table_mapping[table_abbr]
-                # Ensure the query is safe from SQL injections by using a prepared statement
                 query = f"UPDATE {table_name} SET AnalystCVSS = %s WHERE {primary_key_column} = %s"
                 cursor.execute(query, (score, record_id))
 
-        connection.commit()  # Commit the changes after all updates are done
+        connection.commit()  
         success = True
     except Exception as e:
         print(f"Error updating analyst scores: {e}")
         if connection:
-            connection.rollback()  # Rollback in case of any error
+            connection.rollback()  # Rollback put here just in case of an error testing
         success = False
         message = "Error updating the analyst scores"
     finally:
@@ -866,9 +847,8 @@ def update_analyst_scores():
             cursor.close()
         if connection:
             connection.close()
-            
         if success:
-            return redirect(url_for('render_mytasks'))  # Redirect back to the main page or wherever appropriate
+            return redirect(url_for('render_mytasks'))  
         else:
             return render_template('Message.html', message=message)
         
@@ -879,7 +859,6 @@ def update_assigned_engineer():
         scan_id = request.form.get("scan_id")
         new_assigned_engineer_id = request.form.get("engineer_id")
 
-        # Assuming scanUtil has a method to update the assigned engineer
         update_success = userManager.update_assigned_engineer(scan_id, new_assigned_engineer_id)
 
         if update_success:
@@ -888,7 +867,6 @@ def update_assigned_engineer():
             message = "Failed to assign engineer."
             return render_template('Message.html', message=message)
     else:
-        # If the request method is not POST, return unauthorized
         raise Unauthorized()      
    
     
@@ -906,12 +884,12 @@ def update_notes():
 
         if role == 3:
             note_success = scanUtil.ana_update_notes(scan_id, notes)
-            print("Ana Land")
+           # print("Ana Land")
             link = "render_mytasks"
         elif role == 4:
             note_success = scanUtil.eng_update_notes(scan_id, notes)
             link = "rendermyjobs"
-            print("landed")
+          ##print("landed")
         else:
             #print("issue with else (2)")
             raise Unauthorized("User role is not authorised to update notes.")
@@ -972,7 +950,7 @@ def updateClose():
     else:
             raise Unauthorized()
     
-######### Test Route for Page Testing ###########
+
 
 @app.route('/SendTuDatabase', methods=['POST'])
 def send_to_database():
@@ -988,7 +966,6 @@ def send_to_database():
 @app.route("/RunZapScan", methods=["POST"])
 def run_ZAP():
     try:
-        # Extracting form data
         scan_target = request.form.get('scanTarget')
         zap_scan_type = request.form.get('zapScanType')
         use_crawler = 'enableSpider' in request.form
@@ -997,11 +974,11 @@ def run_ZAP():
         userid = session['user_id']
         
         # Debugging stuff below
-        print("Received form data:")
-        print("Scan Target:", scan_target)
-        print("ZAP Scan Type:", zap_scan_type)
-        print("Use Crawler:", use_crawler)
-        print("Exclusion List:", exclusion_list)
+      #  print("Received form data:")
+      #  print("Scan Target:", scan_target)
+       # print("ZAP Scan Type:", zap_scan_type)
+        #print("Use Crawler:", use_crawler)
+        #print("Exclusion List:", exclusion_list)
 
         scanUtil.run_zap_scan(scan_target, zap_scan_type, use_crawler, exclusion_list, scan_id, userid )
         message = "Scan was successful - check terminal for details."
@@ -1009,9 +986,6 @@ def run_ZAP():
         message = f"Scan failed: {str(e)}"
 
     return render_template('Message.html', message=message)
-
-
-
 
 
 @app.route('/resetUserPassword', methods=['POST'])
